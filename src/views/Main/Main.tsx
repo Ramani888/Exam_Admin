@@ -25,6 +25,7 @@ import Topic from '../Topic/Topic';
 import SubjectiveQuestions from '../SubjectiveQuestions/SubjectiveQuestions';
 import AddSubjectiveQuestions from '../SubjectiveQuestions/AddSubjectiveQuestions/AddSubjectiveQuestions';
 import AddObjectiveQuestions from '../ObjectiveQuestions/AddObjectiveQuestions/AddObjectiveQuestions';
+import ObjectiveQuestions from '../ObjectiveQuestions/ObjectiveQuestions';
 // import Topic from '../Topic/Topic';
 // import SubjectiveQuestions from '../SubjectiveQuestions/SubjectiveQuestions';
 // import AddSubjectiveQuestions from '../SubjectiveQuestions/AddSubjectiveQuestions/AddSubjectiveQuestions';
@@ -177,14 +178,14 @@ const Main = () => {
                 </Suspense>
               }
             />
-            {/* <Route
+            <Route
               path="/question-bank/objective-questions"
               element={
                 <Suspense>
                   <ObjectiveQuestions />
                 </Suspense>
               }
-            /> */}
+            />
             <Route
               path="/question-bank/new-objective-question"
               element={
