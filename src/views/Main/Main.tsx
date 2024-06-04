@@ -16,8 +16,6 @@ import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-
 
 import { LogoutContainer, LogoutTitle } from './Main.styled';
 import LogoutIcon from '@mui/icons-material/Logout';
-// import Dashboard from '../Dashboard/Dashboard';
-// import Subject from '../Subject/Subject';
 import Batch from '../Batch/Batch';
 import Dashboard from '../Dashboard/Dashboard';
 import Subject from '../Subject/Subject';
@@ -26,13 +24,8 @@ import SubjectiveQuestions from '../SubjectiveQuestions/SubjectiveQuestions';
 import AddSubjectiveQuestions from '../SubjectiveQuestions/AddSubjectiveQuestions/AddSubjectiveQuestions';
 import AddObjectiveQuestions from '../ObjectiveQuestions/AddObjectiveQuestions/AddObjectiveQuestions';
 import ObjectiveQuestions from '../ObjectiveQuestions/ObjectiveQuestions';
-// import Topic from '../Topic/Topic';
-// import SubjectiveQuestions from '../SubjectiveQuestions/SubjectiveQuestions';
-// import AddSubjectiveQuestions from '../SubjectiveQuestions/AddSubjectiveQuestions/AddSubjectiveQuestions';
-// import ObjectiveQuestions from '../ObjectiveQuestions/ObjectiveQuestions';
-// import AddObjectiveQuestions from '../ObjectiveQuestions/AddObjectiveQuestions/AddObjectiveQuestions';
-// import ExamCreation from '../ExamCreation/ExamCreation';
-// import NewExamCreation from '../ExamCreation/NewExamCreation/NewExamCreation';
+import ExamCreation from '../ExamCreation/ExamCreation';
+import NewExamCreation from '../ExamCreation/NewExamCreation/NewExamCreation';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -194,22 +187,22 @@ const Main = () => {
                 </Suspense>
               }
             />
-            {/* <Route
+            <Route
               path="/exam-management/exam-creation"
               element={
                 <Suspense>
                   <ExamCreation />
                 </Suspense>
               }
-            /> */}
-            {/* <Route
+            />
+            <Route
               path="/exam-management/new-exam-creation"
               element={
                 <Suspense>
                   <NewExamCreation />
                 </Suspense>
               }
-            /> */}
+            />
 
             <Route path="*" element={<Navigate to={'/dashboard'} />} />
           </Routes>

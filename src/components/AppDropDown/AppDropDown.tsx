@@ -51,7 +51,7 @@ const AppDropDown: React.FC<Props> = ({ data, handleChange, value, placeHolder, 
           <MenuItem disabled value="">
             <em>{placeHolder}</em>
           </MenuItem>
-          {data.map((item, index) => (
+          {data?.map((item, index) => (
             <MenuItem
               key={index}
               value={valueByName ? item?.name : item?._id}
