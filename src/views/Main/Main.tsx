@@ -21,6 +21,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Batch from '../Batch/Batch';
 import Dashboard from '../Dashboard/Dashboard';
 import Subject from '../Subject/Subject';
+import Topic from '../Topic/Topic';
 // import Topic from '../Topic/Topic';
 // import SubjectiveQuestions from '../SubjectiveQuestions/SubjectiveQuestions';
 // import AddSubjectiveQuestions from '../SubjectiveQuestions/AddSubjectiveQuestions/AddSubjectiveQuestions';
@@ -141,14 +142,14 @@ const Main = () => {
                 </Suspense>
               }
             />
-            {/* <Route
+            <Route
               path="/question-bank/topic"
               element={
                 <Suspense>
                   <Topic />
                 </Suspense>
               }
-            /> */}
+            />
             <Route
               path="/candidates/batch"
               element={
