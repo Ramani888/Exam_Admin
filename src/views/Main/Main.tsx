@@ -22,6 +22,8 @@ import Batch from '../Batch/Batch';
 import Dashboard from '../Dashboard/Dashboard';
 import Subject from '../Subject/Subject';
 import Topic from '../Topic/Topic';
+import SubjectiveQuestions from '../SubjectiveQuestions/SubjectiveQuestions';
+import AddSubjectiveQuestions from '../SubjectiveQuestions/AddSubjectiveQuestions/AddSubjectiveQuestions';
 // import Topic from '../Topic/Topic';
 // import SubjectiveQuestions from '../SubjectiveQuestions/SubjectiveQuestions';
 // import AddSubjectiveQuestions from '../SubjectiveQuestions/AddSubjectiveQuestions/AddSubjectiveQuestions';
@@ -158,22 +160,22 @@ const Main = () => {
                 </Suspense>
               }
             />
-            {/* <Route
+            <Route
               path="/question-bank/subjective-questions"
               element={
                 <Suspense>
                   <SubjectiveQuestions />
                 </Suspense>
               }
-            /> */}
-            {/* <Route
+            />
+            <Route
               path="/question-bank/new-subjective-question"
               element={
                 <Suspense>
                   <AddSubjectiveQuestions />
                 </Suspense>
               }
-            /> */}
+            />
             {/* <Route
               path="/question-bank/objective-questions"
               element={
