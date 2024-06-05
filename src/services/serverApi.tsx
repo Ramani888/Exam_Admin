@@ -1,4 +1,5 @@
 import { IBanner } from "../types/banner";
+import { IExam } from "../types/exam";
 import { IProduct } from "../types/product";
 import { ISubjectiveQuestion } from "../types/question";
 import { ISubject } from "../types/subject";
@@ -183,5 +184,25 @@ export const serverGetQuestionType = async () => {
 ////////// Exam Api ///////////
 export const serverGetExamType = async () => {
   const res = await serverRequest('/exam/type', 'GET', null, true);
+  return res
+}
+
+export const serverGetExamQuestion = async (examTypeId: number, questionTypeId: string, subjectId: string, topicId: string) => {
+  const res = await serverRequest(`/exam/question?examTypeId=${examTypeId}&questionTypeId=${questionTypeId}&subjectId=${subjectId}&topicId=${topicId}`, 'GET', null, true);
+  return res
+}
+
+export const serverInsertExam = async (data: IExam) => {
+  const res = await serverRequest('/exam', 'POST', data, true);
+  return res
+}
+
+export const serverGetExamData = async () => {
+  const res = await serverRequest('/exam', 'GET', null, true);
+  return res
+}
+
+export const serverDeleteExam = async (examId: string) => {
+  const res = await serverRequest(`/exam?examId=${examId}`, 'DELETE', null, true);
   return res
 }

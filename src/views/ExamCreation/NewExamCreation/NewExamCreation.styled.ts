@@ -33,6 +33,7 @@ width: 100%;
 justify-content: center;
 gap: 20px;
 margin-top: 40px;
+margin-bottom: 20px;
 `
 export const NewExamCreationBodyWrapper = styled.div`
 display: flex;
@@ -67,4 +68,34 @@ gap: 60px;
 width: 100%;
 margin-top: 30px;
 margin-bottom: 30px;
+`
+export const ExamQuestionTableContainer = styled.div`
+width: 100%;
+margin-top: 30px;
+margin-bottom: 30px;
+`
+export const PassingMarkContainer = styled.div`
+width: 100%;
+margin-top: 30px;
+margin-bottom: 30px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 5px;
+`
+export const PassingMarkLabel = styled.div`
+`
+export const PassingMarkWrapper = styled.div`
+display: flex;
+align-items: center;
+gap: 5px;
+`
+export const PassingMarkInput = styled.input`
+width: 60px;
+height: 20px;
+`
+export const TotalMark = styled.div`
+font-size: 18px;
+font-weight: bold;
 `

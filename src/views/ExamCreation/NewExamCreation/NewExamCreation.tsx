@@ -10,7 +10,13 @@ import {
     SubjectSelectionContainer,
     SubjectSelectionHeaderContainer,
     SubjectSelectionBodyContainer,
-    SubjectSelectionBodyRow
+    SubjectSelectionBodyRow,
+    ExamQuestionTableContainer,
+    PassingMarkContainer,
+    PassingMarkLabel,
+    PassingMarkWrapper,
+    PassingMarkInput,
+    TotalMark
 } from './NewExamCreation.styled'
 import AddHeader from '../../../components/AddHeader/AddHeader'
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -32,7 +38,8 @@ import AppRadioButtonGroup from '../../../components/AppRadioButtonGroup/AppRadi
 import { Stepper, Step, Box, StepButton, Button } from '@mui/material';
 import useNewExamCreation from "./useNewExamCreation";
 import AppDropDown from "../../../components/AppDropDown/AppDropDown";
-import AddButton from "../../../components/AddButton/AddButton";
+import { examTypeData } from "../../../types/exam.d";
+import { MaterialReactTable } from "material-react-table";
 
 const CustomRadio = styled(Radio)(({ theme }) => ({
     '&.Mui-checked': {
@@ -44,7 +51,7 @@ const CustomRadio = styled(Radio)(({ theme }) => ({
 }));
 
 const NewExamCreation = () => {
-    const { schema, handleClose, examTypeData, subjectData, topicData, questionTypeData } = useNewExamCreation();
+    const { schema, handleClose, subjectData, topicData, handleGetQuestion, getFilterQuestionTypeData, examQuestionTable, examQuestionData, setExamQuestionData, handleSubmit } = useNewExamCreation();
     const location = useLocation();
     const editData = location.state;
     const navigate = useNavigate();
@@ -67,6 +74,13 @@ const NewExamCreation = () => {
     const handleNext = () => {
         setActiveStep(activeStep + 1);
     };
+
+    const handleBack = () => {
+        setActiveStep(activeStep - 1);
+    };
+
+    const totalMark = examQuestionData.filter(item => item.selected).reduce((acc, item) => acc + item.mark, 0);
+    const anySelected = examQuestionData.some(item => item.selected);
     return (
         <NewExamCreationContainer>
             <NewExamCreationHeaderContainer>
@@ -103,14 +117,15 @@ const NewExamCreation = () => {
 
                         subjectId: editData ? editData?.subjectId : '',
                         topicId: editData ? editData?.topicId : '',
-                        questionTypeId: editData? editData?.questionTypeId : ''
+                        questionTypeId: editData? editData?.questionTypeId : '',
+                        passingMark: editData ? editData?.passingMark : '',
                     }}
                     onSubmit={(values) => {
-                        // if (editData) {
-                        //     handleUpdate({...editData, ...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark), options: rows?.filter((item: any) => item?.name !== '')})
-                        // } else {
-                        //     handleSubmit({...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark), options: rows?.filter((item: any) => item?.name !== '')})
-                        // }
+                        if (editData) {
+                        } else {
+                            const questions = examQuestionData.filter(item => item.selected).map(item => ({ questionId: item?._id?.toString() }));
+                            handleSubmit({...values, totalMark: totalMark, questions: questions})
+                        }
                     }}
                 >
                     {({
@@ -124,7 +139,7 @@ const NewExamCreation = () => {
                     isValidating,
                     isSubmitting    
                     }) => (
-                        <Form>
+                        <Form onSubmit={handleSubmit}>
                             {!activeStep ? (
                                 <NewExamCreationBodyWrapper>
                                     <Accordion sx={{width: '100%'}} expanded={expanded === 'panel1'} onChange={handleAccordianChange('panel1')}>
@@ -201,6 +216,7 @@ const NewExamCreation = () => {
                                                 placeHolder={'Please select'} 
                                                 handleChange={(e) => {
                                                     handleChange(e);
+                                                    setExamQuestionData([]);
                                                 }} 
                                                 value={values?.examTypeId}
                                                 name={'examTypeId'}
@@ -347,7 +363,10 @@ const NewExamCreation = () => {
                                             <AppDropDown
                                                 data={subjectData} 
                                                 placeHolder={'Please select'} 
-                                                handleChange={(e) => handleChange(e)} 
+                                                handleChange={(e) => {
+                                                    handleChange(e);
+                                                    setExamQuestionData([]);
+                                                }} 
                                                 value={values?.subjectId}
                                                 name={'subjectId'}
                                                 handleBlur={handleBlur}
@@ -361,7 +380,10 @@ const NewExamCreation = () => {
                                             <AppDropDown
                                                 data={topicData} 
                                                 placeHolder={'Please select'} 
-                                                handleChange={(e) => handleChange(e)} 
+                                                handleChange={(e) => {
+                                                    handleChange(e);
+                                                    setExamQuestionData([]);
+                                                }}
                                                 value={values?.topicId}
                                                 name={'topicId'}
                                                 handleBlur={handleBlur}
@@ -373,9 +395,12 @@ const NewExamCreation = () => {
                                             />
 
                                             <AppDropDown
-                                                data={questionTypeData} 
+                                                data={getFilterQuestionTypeData(values?.examTypeId)} 
                                                 placeHolder={'Please select'} 
-                                                handleChange={(e) => handleChange(e)} 
+                                                handleChange={(e) => {
+                                                    handleChange(e);
+                                                    setExamQuestionData([]);
+                                                }}
                                                 value={values?.questionTypeId}
                                                 name={'questionTypeId'}
                                                 handleBlur={handleBlur}
@@ -387,11 +412,27 @@ const NewExamCreation = () => {
                                             />
                                         </SubjectSelectionBodyRow>
                                         <Divider sx={{width: '100%'}}/>
-                                        <Button variant="contained" onClick={() => {}} sx={{background: '#0b3157', color: '#ffffff', marginTop: '15px', marginBottom: '15px'}}>{'Get Marks Details'}</Button>
+                                        <Button variant="contained" onClick={() => handleGetQuestion(values?.examTypeId, values?.questionTypeId, values?.subjectId, values?.topicId)} color={'secondary'} sx={{marginTop: '20px', marginBottom: '20px'}} disabled={!(values?.subjectId && values?.topicId && values?.questionTypeId)}>{'Get Question'}</Button>
                                         <Divider sx={{width: '100%'}}/>
-                                        <Button variant="contained" onClick={() => {}} sx={{background: '#0b3157', color: '#ffffff', marginTop: '15px', marginBottom: '15px'}}>{'Add Selection'}</Button>
+                                        <ExamQuestionTableContainer>
+                                            <MaterialReactTable table={examQuestionTable} />
+                                        </ExamQuestionTableContainer>
+                                        {/* <Button variant="contained" onClick={() => {}} sx={{background: '#0b3157', color: '#ffffff', marginTop: '15px', marginBottom: '15px'}}>{'Add Selection'}</Button> */}
+                                        <Divider sx={{width: '100%'}}/>
+                                        <PassingMarkContainer>
+                                            <PassingMarkLabel>Passing marks for exam / Total marks</PassingMarkLabel>
+                                            <PassingMarkWrapper>
+                                                <PassingMarkInput value={values?.passingMark} onChange={(e) => handleChange(e)} name="passingMark" type="number"></PassingMarkInput>
+                                                <TotalMark>/ {totalMark}</TotalMark>
+                                            </PassingMarkWrapper>
+                                        </PassingMarkContainer>
                                         <Divider sx={{width: '100%'}}/>
                                     </SubjectSelectionBodyContainer>
+                                    <ButtonContainer>
+                                        <Button onClick={() => handleBack()} variant="contained" color={'inherit'}>Prev</Button>
+                                        <Button onClick={() => handleClose()} variant="contained" color={'error'}>Cancel</Button>
+                                        <Button type="submit" variant="contained" color={'primary'} disabled={!anySelected}>Generate Exam</Button>
+                                    </ButtonContainer>
                                 </SubjectSelectionContainer>
                             )}
                         </Form>
