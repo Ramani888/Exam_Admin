@@ -187,7 +187,7 @@ export const serverGetExamType = async () => {
   return res
 }
 
-export const serverGetExamQuestion = async (examTypeId: number, questionTypeId: string, subjectId: string, topicId: string) => {
+export const serverGetExamQuestion = async (examTypeId: number, questionTypeId: string[], subjectId: string, topicId: string) => {
   const res = await serverRequest(`/exam/question?examTypeId=${examTypeId}&questionTypeId=${questionTypeId}&subjectId=${subjectId}&topicId=${topicId}`, 'GET', null, true);
   return res
 }

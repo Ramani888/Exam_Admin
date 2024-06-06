@@ -21,6 +21,7 @@ const useNewExamCreation = () => {
   const [topicData, setTopicData] = useState<ITopic[]>([]);
   const [questionTypeData, setQuestionTypeData] = useState<IQuestionType[]>([]);
   const [examQuestionData, setExamQuestionData] = useState<IExamQuestion[]>([]);
+  const [selectedQuestionType, setSelectedQuestionType] = useState<string[]>([])
   const navigate = useNavigate();
   const schema = Yup.object().shape({
     name: Yup.string().required("Enater exam name.*"),
@@ -98,7 +99,7 @@ const useNewExamCreation = () => {
     }
   }
 
-  const getExamQuestionData = async(examTypeId: number, questionTypeId: string, subjectId: string, topicId: string) => {
+  const getExamQuestionData = async(examTypeId: number, questionTypeId: string[], subjectId: string, topicId: string) => {
     try {
       setLoading(true);
       const data = await serverGetExamQuestion(examTypeId, questionTypeId, subjectId, topicId);
@@ -118,7 +119,7 @@ const useNewExamCreation = () => {
     }
   }
 
-  const handleGetQuestion = (examTypeId: number, questionTypeId: string, subjectId: string, topicId: string) => {
+  const handleGetQuestion = (examTypeId: number, questionTypeId: string[], subjectId: string, topicId: string) => {
     getExamQuestionData(examTypeId, questionTypeId, subjectId, topicId)
   }
 
@@ -197,14 +198,19 @@ const useNewExamCreation = () => {
     }
   };
 
+  const handleQuestionTypeChange = (event: any) => {
+    const {
+      target: { value },
+    } = event;
+    setSelectedQuestionType(typeof value === 'string' ? value.split(',') : value)
+  }
+
   useEffect(() => {
     getExamTypeData();
     getSubjectData();
     getTopicData();
     getQuestionTypeData();
   }, [])
-
-  console.log('examQuestionData', examQuestionData)
   
   return {
     schema,
@@ -216,7 +222,10 @@ const useNewExamCreation = () => {
     examQuestionTable,
     examQuestionData,
     setExamQuestionData,
-    handleSubmit
+    handleSubmit,
+    handleQuestionTypeChange,
+    selectedQuestionType,
+    setSelectedQuestionType
   }
 }
 

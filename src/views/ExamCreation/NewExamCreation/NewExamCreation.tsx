@@ -40,6 +40,7 @@ import useNewExamCreation from "./useNewExamCreation";
 import AppDropDown from "../../../components/AppDropDown/AppDropDown";
 import { examTypeData } from "../../../types/exam.d";
 import { MaterialReactTable } from "material-react-table";
+import AppMultiDropDown from "../../../components/AppMultiDropDwon/AppMultiDropDown";
 
 const CustomRadio = styled(Radio)(({ theme }) => ({
     '&.Mui-checked': {
@@ -51,7 +52,7 @@ const CustomRadio = styled(Radio)(({ theme }) => ({
 }));
 
 const NewExamCreation = () => {
-    const { schema, handleClose, subjectData, topicData, handleGetQuestion, getFilterQuestionTypeData, examQuestionTable, examQuestionData, setExamQuestionData, handleSubmit } = useNewExamCreation();
+    const { schema, handleClose, subjectData, topicData, handleGetQuestion, getFilterQuestionTypeData, examQuestionTable, examQuestionData, setExamQuestionData, handleSubmit, handleQuestionTypeChange, selectedQuestionType, setSelectedQuestionType } = useNewExamCreation();
     const location = useLocation();
     const editData = location.state;
     const navigate = useNavigate();
@@ -117,14 +118,14 @@ const NewExamCreation = () => {
 
                         subjectId: editData ? editData?.subjectId : '',
                         topicId: editData ? editData?.topicId : '',
-                        questionTypeId: editData? editData?.questionTypeId : '',
+                        questionTypeId: editData? editData?.questionTypeId : '',    
                         passingMark: editData ? editData?.passingMark : '',
                     }}
                     onSubmit={(values) => {
                         if (editData) {
                         } else {
                             const questions = examQuestionData.filter(item => item.selected).map(item => ({ questionId: item?._id?.toString() }));
-                            handleSubmit({...values, totalMark: totalMark, questions: questions})
+                            handleSubmit({...values, totalMark: totalMark, questions: questions, questionTypeId: selectedQuestionType})
                         }
                     }}
                 >
@@ -216,6 +217,7 @@ const NewExamCreation = () => {
                                                 placeHolder={'Please select'} 
                                                 handleChange={(e) => {
                                                     handleChange(e);
+                                                    setSelectedQuestionType([]);
                                                     setExamQuestionData([]);
                                                 }} 
                                                 value={values?.examTypeId}
@@ -394,14 +396,14 @@ const NewExamCreation = () => {
                                                 isRequired
                                             />
 
-                                            <AppDropDown
+                                            <AppMultiDropDown
                                                 data={getFilterQuestionTypeData(values?.examTypeId)} 
                                                 placeHolder={'Please select'} 
                                                 handleChange={(e) => {
-                                                    handleChange(e);
+                                                    handleQuestionTypeChange(e);
                                                     setExamQuestionData([]);
                                                 }}
-                                                value={values?.questionTypeId}
+                                                value={selectedQuestionType}
                                                 name={'questionTypeId'}
                                                 handleBlur={handleBlur}
                                                 errors={errors}
@@ -412,7 +414,7 @@ const NewExamCreation = () => {
                                             />
                                         </SubjectSelectionBodyRow>
                                         <Divider sx={{width: '100%'}}/>
-                                        <Button variant="contained" onClick={() => handleGetQuestion(values?.examTypeId, values?.questionTypeId, values?.subjectId, values?.topicId)} color={'secondary'} sx={{marginTop: '20px', marginBottom: '20px'}} disabled={!(values?.subjectId && values?.topicId && values?.questionTypeId)}>{'Get Question'}</Button>
+                                        <Button variant="contained" onClick={() => handleGetQuestion(values?.examTypeId, selectedQuestionType, values?.subjectId, values?.topicId)} color={'secondary'} sx={{marginTop: '20px', marginBottom: '20px'}} disabled={!(values?.subjectId && values?.topicId && !(selectedQuestionType?.length === 0))}>{'Get Question'}</Button>
                                         <Divider sx={{width: '100%'}}/>
                                         <ExamQuestionTableContainer>
                                             <MaterialReactTable table={examQuestionTable} />

@@ -5,7 +5,6 @@ import {
     useMaterialReactTable,
 } from 'material-react-table';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
@@ -16,6 +15,7 @@ import { ISubject } from '../../types/subject';
 import { ITopic } from '../../types/topic';
 import { IQuestionType } from '../../types/question';
 import moment from 'moment';
+import Chip from '@mui/material/Chip';
 
 export const useExamCreation = () => {
     const navigate = useNavigate();
@@ -35,10 +35,13 @@ export const useExamCreation = () => {
         return res?.name
     }
 
-    const getQuestionTypeName = (typeId?: string) => {
-        const res = questionTypeData?.find((item) => item?._id?.toString() === typeId)
-        return res?.name
-    }
+    const getQuestionTypeNames = (typeIds?: string[]) => {
+        if (!typeIds) return [];
+        return typeIds.map(typeId => {
+            const res = questionTypeData?.find(item => item?._id?.toString() === typeId);
+            return res?.name;
+        }).filter(name => name); // Filter out any undefined names
+    };
 
     const columns = useMemo<MRT_ColumnDef<IExam>[]>(
         () => [
@@ -83,11 +86,15 @@ export const useExamCreation = () => {
                 accessorKey: "questionTypeId",
                 header: "Question Type",
                 Cell: ({ row }) => {
-                  return (
-                  <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
-                    {getQuestionTypeName(row?.original?.questionTypeId)}
-                  </Box>
-                  )
+                    const typeIds = row?.original?.questionTypeId;
+                    const typeNames = getQuestionTypeNames(typeIds);
+                    return (
+                        <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center', flexWrap: 'wrap' }}>
+                            {typeNames.map((name, index) => (
+                                <Chip key={index} label={name} />
+                            ))}
+                        </Box>
+                    );
                 },
             },
             {

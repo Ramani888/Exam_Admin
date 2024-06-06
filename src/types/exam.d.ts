@@ -61,7 +61,7 @@ export interface IExam {
     isQuestionNavigation: boolean;
     subjectId: string;
     topicId: string;
-    questionTypeId: string;
+    questionTypeId: string[];
     passingMark: number;
     totalMark: number;
     questions: IQuestion[];
