@@ -89,7 +89,7 @@ const NewExamCreation = () => {
                     <Stepper nonLinear activeStep={activeStep}>
                         {steps.map((label, index) => (
                         <Step key={label}>
-                            <StepButton color="inherit" onClick={handleStep(index)}>
+                            <StepButton color="inherit">
                             {label}
                             </StepButton>
                         </Step>
