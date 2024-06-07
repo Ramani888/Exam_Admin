@@ -51,6 +51,11 @@ export const SidebarData = [
         path: "/exam-management/exam-creation",
         Icon: DashboardIcon,
       },
+      {
+        title: "Exam Scheduler",
+        path: "/exam-management/exam-scheduler",
+        Icon: DashboardIcon,
+      },
     ],
   },
   {
