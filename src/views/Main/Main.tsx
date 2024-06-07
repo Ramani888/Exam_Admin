@@ -26,6 +26,8 @@ import AddObjectiveQuestions from '../ObjectiveQuestions/AddObjectiveQuestions/A
 import ObjectiveQuestions from '../ObjectiveQuestions/ObjectiveQuestions';
 import ExamCreation from '../ExamCreation/ExamCreation';
 import NewExamCreation from '../ExamCreation/NewExamCreation/NewExamCreation';
+import ExamScheduler from '../ExamScheduler/ExamScheduler';
+import NewExamScheduler from '../ExamScheduler/NewExamScheduler/NewExamScheduler';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -200,6 +202,22 @@ const Main = () => {
               element={
                 <Suspense>
                   <NewExamCreation />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/exam-management/exam-scheduler"
+              element={
+                <Suspense>
+                  <ExamScheduler />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/exam-management/new-exam-scheduler"
+              element={
+                <Suspense>
+                  <NewExamScheduler />
                 </Suspense>
               }
             />
