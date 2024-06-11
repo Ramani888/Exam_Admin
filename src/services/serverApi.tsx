@@ -1,5 +1,5 @@
 import { IBanner } from "../types/banner";
-import { IExam } from "../types/exam";
+import { IExam, IExamSchedule } from "../types/exam";
 import { IProduct } from "../types/product";
 import { ISubjectiveQuestion } from "../types/question";
 import { ISubject } from "../types/subject";
@@ -204,5 +204,27 @@ export const serverGetExamData = async () => {
 
 export const serverDeleteExam = async (examId: string) => {
   const res = await serverRequest(`/exam?examId=${examId}`, 'DELETE', null, true);
+  return res
+}
+
+
+////////// Exam Schedule Api ///////////
+export const serverInsertExamSchedule = async (data: IExamSchedule) => {
+  const res = await serverRequest('/exam/schedule', 'POST', data, true);
+  return res
+}
+
+export const serverGetExamSchedule = async () => {
+  const res = await serverRequest('/exam/schedule', 'GET', null, true);
+  return res
+}
+
+export const serverUpdateExamSchedule = async (data: IExamSchedule) => {
+  const res = await serverRequest('/exam/schedule', 'PUT', data, true);
+  return res
+}
+
+export const serverDeleteExamSchedule = async (examScheduleId: string) => {
+  const res = await serverRequest(`/exam/schedule?examScheduleId=${examScheduleId}`, 'DELETE', null, true);
   return res
 }

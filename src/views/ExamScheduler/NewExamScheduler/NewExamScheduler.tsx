@@ -9,18 +9,24 @@ import {
     Button, Box, CircularProgress
   } from '@mui/material';
 import useNewExamScheduler from './useNewExamScheduler';
+import moment from 'moment';
 
 const NewExamScheduler = () => {
     const location = useLocation();
     const editData = location.state;
+    console.log('editData', editData)
     const navigate = useNavigate();
     const handleNavigate = () => {
         navigate('/exam-management/exam-scheduler');
     }
     const {
         handleClose,
-        examData
+        examData,
+        schema,
+        handleSubmit,
+        handleUpdate
     } = useNewExamScheduler();
+
     return (
         <NewExamSchedulerContainer>
             <NewExamSchedulerHeaderContainer>
@@ -28,18 +34,21 @@ const NewExamScheduler = () => {
             </NewExamSchedulerHeaderContainer>
             <NewExamSchedulerBodyContainer>
                 <Formik
-                    // validationSchema={schema}
+                    validationSchema={schema}
                     initialValues={{
                         examId: editData ? editData?.examId : '',
-                        startDate: editData ? editData?.startDate : '',
+                        startDate: editData ? moment(editData?.startDate).format('YYYY-MM-DD') : '',
                         startTime: editData ? editData?.startTime : '',
-                        endDate: editData ? editData?.endDate : '',
+                        endDate: editData ? moment(editData?.endDate).format('YYYY-MM-DD') : '',
                         endTime: editData ? editData?.endTime : '',
                     }}
                     onSubmit={(values) => {
                         if (editData) {
-                            // handleUpdate({...editData, ...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark), options: rows?.filter((item: any) => item?.name !== '')})
+                            console.log('values', {...values, _id: editData?._id})
+                            handleUpdate({...values, _id: editData?._id})
                         } else {
+                            handleSubmit({...values})
+                            console.log('values', values)
                             // handleSubmit({...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark), options: rows?.filter((item: any) => item?.name !== '')})
                         }
                     }}
@@ -52,7 +61,7 @@ const NewExamScheduler = () => {
                     handleBlur,
                     handleSubmit,
                     }) => (
-                        <Form>
+                        <Form onSubmit={handleSubmit}>
                             <NewExamSchedulerRow>
                                 <AppDropDown
                                     data={examData} 

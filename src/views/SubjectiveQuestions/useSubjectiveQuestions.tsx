@@ -177,27 +177,27 @@ const useSubjectiveQuestions = () => {
         enableStickyHeader: true,
         muiTableContainerProps: { sx: { maxHeight: "65vh" } },
         renderRowActions: ({ row, table }) => (
-            <Box sx={{ display: 'flex', gap: '1rem' }}>
-              <Tooltip title="Edit">
-                  <IconButton onClick={() => handleEditData(row)}>
-                      <EditIcon />
-                  </IconButton>
-              </Tooltip>
-              <Tooltip title="Delete">
-                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
-                      <DeleteIcon />
-                  </IconButton>
-              </Tooltip>
-            </Box>
+          <Box sx={{ display: 'flex', gap: '1rem' }}>
+            <Tooltip title="Edit">
+                <IconButton onClick={() => handleEditData(row)}>
+                    <EditIcon />
+                </IconButton>
+            </Tooltip>
+            <Tooltip title="Delete">
+                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                    <DeleteIcon />
+                </IconButton>
+            </Tooltip>
+          </Box>
         ),
         renderTopToolbarCustomActions: ({ table }) => (
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={() => navigate('/question-bank/new-subjective-question')}
-            >
-                New
-            </Button>
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={() => navigate('/question-bank/new-subjective-question')}
+          >
+            New
+          </Button>
         ),
     });
     return {
