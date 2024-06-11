@@ -3,41 +3,90 @@ import {
     type MRT_Row,
     useMaterialReactTable,
 } from 'material-react-table';
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
+import { serverDeleteExamSchedule, serverGetExamData, serverGetExamSchedule } from '../../services/serverApi';
+import { IExam, IExamSchedule } from '../../types/exam';
+import { formatDateTime, getStringDateTime } from '../../utils/consts/exam';
+import moment from 'moment';
 
 const useExamScheduler = () => {
-    const navigate = useNavigate();
-    const columns = useMemo<MRT_ColumnDef<any>[]>(
-        () => [
+    const [loading, setLoading] = useState<boolean>(false);
+    const [examScheduleData, setExamScheduleData] = useState<IExamSchedule[]>([]);
+    const [examData, setExamData] = useState<IExam[]>([]);
 
+    const getExamName = (examId?: string) => {
+        const res = examData?.find((item) => item?._id?.toString() === examId)
+        return res?.name
+    }
+
+    const navigate = useNavigate();
+    const columns = useMemo<MRT_ColumnDef<IExamSchedule>[]>(
+        () => [
+            {
+                accessorKey: "examId",
+                header: "Exam Name",
+                Cell: ({ row }: any) => {
+                return (
+                <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+                    {getExamName(row?.original?.examId)}
+                </Box>
+                )
+                },
+            },
+            {
+                accessorKey: "starDate",
+                header: "Start Date",
+                Cell: ({ row }: any) => {
+                return (
+                <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+                    {getStringDateTime(moment(row?.original?.startDate).format('YYYY-MM-DD'), String(row?.original?.startTime))}
+                </Box>
+                )
+                },
+            },
+            {
+                accessorKey: "endDate",
+                header: "End Date",
+                Cell: ({ row }: any) => {
+                return (
+                <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+                    {getStringDateTime(moment(row?.original?.endDate).format('YYYY-MM-DD'), row?.original?.endTime)}
+                </Box>
+                )
+                },
+            },
         ],
-      []
+      [examData]
     );
+
+    const handleEditData = (row: MRT_Row<IExamSchedule>) => {
+        navigate('/exam-management/new-exam-scheduler', { state: row?.original });
+    }
 
     const table = useMaterialReactTable({
         columns,
-        data: [],
+        data: examScheduleData,
         enableEditing: true,
         positionActionsColumn: "last",
         enablePagination: false,
         enableBottomToolbar: false,
-        state: { isLoading: false },
+        state: { isLoading: loading },
         enableStickyHeader: true,
         muiTableContainerProps: { sx: { maxHeight: "65vh" } },
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
               <Tooltip title="Edit">
-                  <IconButton onClick={() => {}}>
+                  <IconButton onClick={() => handleEditData(row)}>
                       <EditIcon />
                   </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-                  <IconButton color="error" onClick={() => {}}>
+                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
                       <DeleteIcon />
                   </IconButton>
               </Tooltip>
@@ -53,6 +102,58 @@ const useExamScheduler = () => {
             </Button>
         ),
     });
+
+    const openDeleteConfirmModal = (row: MRT_Row<IExamSchedule>) => {
+        if (window.confirm('Are you sure you want to delete this exam schedule?')) {
+          handleDelete(row?.original?._id?.toString());
+        }
+    };
+
+    const handleDelete = async (examScheduleId: any) => {
+        try {
+            setLoading(true);
+            await serverDeleteExamSchedule(examScheduleId);
+            getExamScheduleData();
+        } catch (err) {
+            console.log(err);
+            setLoading(false);
+        } finally {
+            getExamScheduleData();
+            setLoading(false);
+        }
+    }
+
+    const getExamScheduleData = async () => {
+        try {
+            setLoading(true);
+            const data = await serverGetExamSchedule();
+            setExamScheduleData(data?.data);
+        } catch (error) {
+            console.log(error);
+            setExamScheduleData([]);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const getExamData = async () => {
+        try {
+            setLoading(true)
+            const data = await serverGetExamData();
+            setExamData(data?.data);
+        } catch (err) {
+            setLoading(false);
+            setExamData([]);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    useEffect(() => {
+        getExamScheduleData()
+        getExamData()
+    }, [])
 
     return {
         table

@@ -68,3 +68,14 @@ export interface IExam {
     createdAt?: Date;
     updatedAt?: Date;
 }
+
+export interface IExamSchedule{
+    _id?: string;
+    examId: string;
+    startDate: Date;
+    startTime: Date;
+    endDate: Date;
+    endTime: Date;
+    createdAt?: Date;
+    updatedAt?: Date;
+}
