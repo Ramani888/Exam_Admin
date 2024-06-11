@@ -1,4 +1,5 @@
 import { IBanner } from "../types/banner";
+import { ICandidate } from "../types/candidate";
 import { IExam, IExamSchedule } from "../types/exam";
 import { IProduct } from "../types/product";
 import { ISubjectiveQuestion } from "../types/question";
@@ -226,5 +227,27 @@ export const serverUpdateExamSchedule = async (data: IExamSchedule) => {
 
 export const serverDeleteExamSchedule = async (examScheduleId: string) => {
   const res = await serverRequest(`/exam/schedule?examScheduleId=${examScheduleId}`, 'DELETE', null, true);
+  return res
+}
+
+
+////////// Candidate Data Api ///////////
+export const serverInsertCandidate = async (data: ICandidate) => {
+  const res = await serverRequest('/candidate', 'POST', data, true);
+  return res
+}
+
+export const serverGetCandidata = async () => {
+  const res = await serverRequest('/candidate', 'GET', null, true);
+  return res
+}
+
+export const serverDeleteCandidate = async (candidateId: string) => {
+  const res = await serverRequest(`/candidate?candidateId=${candidateId}`, 'DELETE', null, true);
+  return res
+}
+
+export const serverUpdateCandidata = async (data: ICandidate) => {
+  const res = await serverRequest(`/candidate`, 'PUT', data, true);
   return res
 }
