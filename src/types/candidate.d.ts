@@ -1,0 +1,12 @@
+export interface ICandidate {
+    _id?: ObjectId;
+    batchId?: string;
+    rollNumber?: string;
+    firstName?: string;
+    lastName?: string;
+    middleName?: string;
+    email?: string;
+    number?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
+}

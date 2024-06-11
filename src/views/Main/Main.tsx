@@ -28,6 +28,8 @@ import ExamCreation from '../ExamCreation/ExamCreation';
 import NewExamCreation from '../ExamCreation/NewExamCreation/NewExamCreation';
 import ExamScheduler from '../ExamScheduler/ExamScheduler';
 import NewExamScheduler from '../ExamScheduler/NewExamScheduler/NewExamScheduler';
+import Candidates from '../Candidates/Candidates';
+import NewCandidates from '../Candidates/NewCandidates/NewCandidates';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -218,6 +220,22 @@ const Main = () => {
               element={
                 <Suspense>
                   <NewExamScheduler />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/candidates/candidate-data"
+              element={
+                <Suspense>
+                  <Candidates />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/candidates/new-candidate-data"
+              element={
+                <Suspense>
+                  <NewCandidates />
                 </Suspense>
               }
             />
