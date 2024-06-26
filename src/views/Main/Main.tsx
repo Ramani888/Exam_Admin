@@ -30,6 +30,8 @@ import ExamScheduler from '../ExamScheduler/ExamScheduler';
 import NewExamScheduler from '../ExamScheduler/NewExamScheduler/NewExamScheduler';
 import Candidates from '../Candidates/Candidates';
 import NewCandidates from '../Candidates/NewCandidates/NewCandidates';
+import LoginView from '../Login/Login';
+import AccountMenu from '../../components/AccountMenu/AccountMenu';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -240,6 +242,15 @@ const Main = () => {
               }
             />
 
+            <Route
+              path="/Login"
+              element={
+                <Suspense>
+                  <LoginView />
+                </Suspense>
+              }
+            />
+
             <Route path="*" element={<Navigate to={'/dashboard'} />} />
           </Routes>
         </Suspense>
@@ -256,6 +267,22 @@ const Main = () => {
         navigate('/dashboard')
       }
     }, [])
+
+    useEffect(() => {
+      const adminDataString = localStorage.getItem('Admin');
+      if (adminDataString) {
+        if (location.pathname === '/Login') {
+          navigate('/')
+        }
+        try {
+          const adminData = JSON.parse(adminDataString);
+        } catch (error) {
+          console.error("Error parsing admin data:", error);
+        }
+      } else {
+        navigate('/Login')
+      }
+    }, [location.pathname])
 
     // useEffect(() => {
     //   const adminDataString = localStorage.getItem('Admin');
@@ -301,9 +328,12 @@ const Main = () => {
                   {theme.direction === 'rtl' ? <ChevronRightIcon sx={{color: '#ffffff'}}/> : <ChevronLeftIcon sx={{color: '#ffffff'}}/>}
                 </IconButton>
               )}
-              <Typography variant="h6" noWrap component="div">
-                Project Title
-              </Typography>
+              <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
+                <Typography variant="h6" noWrap component="div">
+                  Project Title
+                </Typography>
+                <AccountMenu />
+              </div>
               </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>

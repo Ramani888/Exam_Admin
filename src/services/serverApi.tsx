@@ -251,3 +251,10 @@ export const serverUpdateCandidata = async (data: ICandidate) => {
   const res = await serverRequest(`/candidate`, 'PUT', data, true);
   return res
 }
+
+
+////////// Admin Login ///////////
+export const serverAdminLogin = async (data: {email: string, password: string}) => {
+  const res = await serverRequest('/admin/login', 'POST', data, true);
+  return res
+}
