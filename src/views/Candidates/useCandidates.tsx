@@ -12,6 +12,7 @@ import { ICandidate } from '../../types/candidate';
 import { serverDeleteCandidate, serverGetBatch, serverGetCandidata } from '../../services/serverApi';
 import { IBatch } from '../../types/batch';
 import EditIcon from '@mui/icons-material/Edit';
+import { deleteSingleImage } from '../../utils/helpers/global';
 
 const useCandidates = () => {
     const navigate = useNavigate();
@@ -65,13 +66,14 @@ const useCandidates = () => {
 
     const openDeleteConfirmModal = (row: any) => {
         if (window.confirm('Are you sure you want to delete this candidate?')) {
-          handleDelete(row?.original?._id?.toString());
+          handleDelete(row?.original?._id?.toString(), row?.original?.profileImg);
         }
     };
 
-    const handleDelete = async (candidateId: any) => {
+    const handleDelete = async (candidateId: any, profileImg: string) => {
         try {
             setLoading(true);
+            await deleteSingleImage(profileImg);
             await serverDeleteCandidate(candidateId);
             getCandidateData();
         } catch (err) {

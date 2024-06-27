@@ -7,6 +7,7 @@ export interface ICandidate {
     middleName?: string;
     email?: string;
     number?: number;
+    profileImg?: string;
     createdAt?: Date;
     updatedAt?: Date;
 }

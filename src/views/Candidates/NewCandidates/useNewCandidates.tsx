@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { ICandidate } from '../../../types/candidate';
 import { IBatch } from '../../../types/batch';
+import { deleteSingleImage, isUrlString, uploadBase64SingleImage } from '../../../utils/helpers/global';
 
 const useNewCandidates = () => {
   const navigate = useNavigate();
@@ -40,21 +41,28 @@ const useNewCandidates = () => {
 
   const handleSubmit = async (data: any) => {
     try {
-        setLoading(true);
-        await serverInsertCandidate(data);
+      setLoading(true);
+      const imagesUrl = await uploadBase64SingleImage(data?.imageSrc, `candidate`, 'image/jpeg');
+      await serverInsertCandidate({...data, profileImg: imagesUrl});
     } catch (err) {
-        console.log(err);
-        setLoading(false);
+      console.log(err);
+      setLoading(false);
     } finally {
-        navigate('/candidates/candidate-data')
-        setLoading(false);
+      navigate('/candidates/candidate-data')
+      setLoading(false);
     }
   };
 
   const handleUpdate = async (data: any) => {
     try {
         setLoading(true);
-        await serverUpdateCandidata(data);
+        if (!isUrlString(data?.imageSrc)) {
+          const imagesUrl = await uploadBase64SingleImage(data?.imageSrc, `candidate`, 'image/jpeg');
+          await deleteSingleImage(data?.deleteProfileImg)
+          await serverUpdateCandidata({...data, profileImg: imagesUrl});
+        } else {
+          await serverUpdateCandidata({...data, profileImg: data?.imageSrc});
+        }
     } catch (err) {
         console.log(err);
         setLoading(false);
@@ -74,7 +82,8 @@ const useNewCandidates = () => {
     handleClose,
     schema,
     handleSubmit,
-    handleUpdate
+    handleUpdate,
+    loading
   }
 }
 

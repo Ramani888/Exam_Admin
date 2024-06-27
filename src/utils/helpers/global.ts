@@ -1,5 +1,5 @@
-import { getDownloadURL, ref, uploadBytesResumable } from "@firebase/storage";
-// import { storage } from "./firbase";
+import { getDownloadURL, ref, uploadBytesResumable, uploadBytes, deleteObject } from "@firebase/storage";
+import { storage } from "./firbase";
 
 export const convertToBase64 = (file: File): Promise<string | ArrayBuffer | null> => {
     return new Promise((resolve, reject) => {
@@ -120,25 +120,72 @@ export const generateId = () => {
 //   return downloadUrl;
 // };
 
-// export const uploadSingleImage = async (image: any) => {
-//   if (!image) {
-//     throw new Error('No image provided'); // Ensure that a valid video file is provided
-//   }
+export const uploadSingleImage = async (image: any) => {
+  if (!image) {
+    throw new Error('No image provided'); // Ensure that a valid video file is provided
+  }
 
-//   // Generate a unique file name for Firebase Storage
-//   const uniqueFileName = `${image.name}-${Date.now()}`; // Add a timestamp to ensure uniqueness
-//   const storageRef = ref(storage, `images/${uniqueFileName}`);
+  // Generate a unique file name for Firebase Storage
+  const uniqueFileName = `${image.name}-${Date.now()}`; // Add a timestamp to ensure uniqueness
+  const storageRef = ref(storage, `candidate/${uniqueFileName}`);
 
-//   const metaData = {
-//     contentType: image.type, // Set the appropriate content type
-//   };
+  const metaData = {
+    contentType: image.type, // Set the appropriate content type
+  };
 
-//   // Upload the video to Firebase Storage
-//   const snapshot = await uploadBytesResumable(storageRef, image, metaData);
+  // Upload the video to Firebase Storage
+  const snapshot = await uploadBytesResumable(storageRef, image, metaData);
 
-//   // Get the download URL of the uploaded video
-//   const downloadUrl = await getDownloadURL(snapshot.ref);
+  // Get the download URL of the uploaded video
+  const downloadUrl = await getDownloadURL(snapshot.ref);
 
-//   // Return only the download URL
-//   return downloadUrl;
-// };
+  // Return only the download URL
+  return downloadUrl;
+};
+
+export const uploadBase64SingleImage = async (base64StringData: string, fileName: string, contentType: string) => {
+  // Step 1: Decode base64 to binary
+  const base64String = base64StringData.replace(/^data:image\/(png|jpeg);base64,/, "");
+
+  const byteCharacters = atob(base64String);
+  // const byteCharacters = decodeBase64String(base64String);
+
+  if (byteCharacters) {
+    // Step 2: Convert binary to Blob
+    const byteNumbers = new Array(byteCharacters?.length);
+    for (let i = 0; i < byteCharacters?.length; i++) {
+      byteNumbers[i] = byteCharacters?.charCodeAt(i);
+    }
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: contentType });
+
+    // Step 3: Generate a unique file name for Firebase Storage (if needed)
+    const uniqueFileName = `${fileName}-${Date.now()}`; // Adjust as needed
+    
+    // Step 4: Upload the Blob to Firebase Storage
+    const storageRef = ref(storage, `candidate/${uniqueFileName}`); // Adjust the storage path as needed
+    const metaData = { contentType };
+
+    try {
+      const snapshot = await uploadBytesResumable(storageRef, blob, metaData);
+      const downloadUrl = await getDownloadURL(snapshot.ref);
+      return downloadUrl;
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      throw error;
+    }
+  }
+};
+
+export const deleteSingleImage = async (path: string) => {
+  try {
+    const fileRef = ref(storage, path);
+    await deleteObject(fileRef);
+  } catch (error) {
+    console.error('Error uploading image:', error);
+    throw error;
+  }
+}
+
+
+
