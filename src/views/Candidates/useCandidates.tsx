@@ -13,6 +13,7 @@ import { serverDeleteCandidate, serverGetBatch, serverGetCandidata } from '../..
 import { IBatch } from '../../types/batch';
 import EditIcon from '@mui/icons-material/Edit';
 import { deleteSingleImage } from '../../utils/helpers/global';
+import Avatar from '@mui/material/Avatar';
 
 const useCandidates = () => {
     const navigate = useNavigate();
@@ -22,23 +23,23 @@ const useCandidates = () => {
     const columns = useMemo<MRT_ColumnDef<any>[]>(
         () => [
             {
+                accessorKey: "firstName",
+                header: "Name",
+                Cell: ({ row }: any) => {
+                return (
+                <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+                    <Avatar alt="Remy Sharp" src={row?.original?.profileImg} /> {row?.original?.firstName + ' ' + row?.original?.middleName + ' ' + row?.original?.lastName}
+                </Box>
+                )
+                },
+            },
+            {
                 accessorKey: "examId",
                 header: "Batch Name",
                 Cell: ({ row }: any) => {
                 return (
                 <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
                     {getBatchName(row?.original?.batchId)}
-                </Box>
-                )
-                },
-            },
-            {
-                accessorKey: "firstName",
-                header: "Name",
-                Cell: ({ row }: any) => {
-                return (
-                <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
-                    {row?.original?.firstName + ' ' + row?.original?.middleName + ' ' + row?.original?.lastName}
                 </Box>
                 )
                 },
