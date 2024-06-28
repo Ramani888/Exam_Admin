@@ -225,7 +225,8 @@ const useNewExamCreation = () => {
     handleSubmit,
     handleQuestionTypeChange,
     selectedQuestionType,
-    setSelectedQuestionType
+    setSelectedQuestionType,
+    examTypeData
   }
 }
 

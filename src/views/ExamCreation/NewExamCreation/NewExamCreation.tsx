@@ -38,7 +38,6 @@ import AppRadioButtonGroup from '../../../components/AppRadioButtonGroup/AppRadi
 import { Stepper, Step, Box, StepButton, Button } from '@mui/material';
 import useNewExamCreation from "./useNewExamCreation";
 import AppDropDown from "../../../components/AppDropDown/AppDropDown";
-import { examTypeData } from "../../../types/exam.d";
 import { MaterialReactTable } from "material-react-table";
 import AppMultiDropDown from "../../../components/AppMultiDropDwon/AppMultiDropDown";
 
@@ -52,7 +51,7 @@ const CustomRadio = styled(Radio)(({ theme }) => ({
 }));
 
 const NewExamCreation = () => {
-    const { schema, handleClose, subjectData, topicData, handleGetQuestion, getFilterQuestionTypeData, examQuestionTable, examQuestionData, setExamQuestionData, handleSubmit, handleQuestionTypeChange, selectedQuestionType, setSelectedQuestionType } = useNewExamCreation();
+    const { schema, handleClose, subjectData, topicData, handleGetQuestion, getFilterQuestionTypeData, examQuestionTable, examQuestionData, setExamQuestionData, handleSubmit, handleQuestionTypeChange, selectedQuestionType, setSelectedQuestionType, examTypeData } = useNewExamCreation();
     const location = useLocation();
     const editData = location.state;
     const navigate = useNavigate();
