@@ -8,8 +8,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useNavigate } from 'react-router-dom';
-import { serverDeleteExam, serverGetExamData, serverGetQuestionType, serverGetSubject, serverGetTopic } from '../../services/serverApi';
-import { IExam } from '../../types/exam';
+import { serverDeleteExam, serverGetExamData, serverGetExamType, serverGetQuestionType, serverGetSubject, serverGetTopic } from '../../services/serverApi';
+import { IExam, IExamQuestion, IExamType } from '../../types/exam';
 import { getExamType } from '../../utils/consts/exam';
 import { ISubject } from '../../types/subject';
 import { ITopic } from '../../types/topic';
@@ -24,6 +24,7 @@ export const useExamCreation = () => {
     const [subjectData, setSubjectData] = useState<ISubject[]>([]);
     const [topicData, setTopicData] = useState<ITopic[]>([]);
     const [questionTypeData, setQuestionTypeData] = useState<IQuestionType[]>([]);
+    const [examTypeData, setExamTypeData] = useState<IExamType[]>([]);
 
     const getSubjectName = (subjectId?: string) => {
         const res = subjectData?.find((item) => item?._id?.toString() === subjectId)
@@ -32,6 +33,11 @@ export const useExamCreation = () => {
 
     const getTopicName = (topicId?: string) => {
         const res = topicData?.find((item) => item?._id?.toString() === topicId)
+        return res?.name
+    }
+
+    const getExamTypeName = (examTypeId?: string) => {
+        const res = examTypeData?.find((item) => item?._id?.toString() === examTypeId)
         return res?.name
     }
 
@@ -55,7 +61,7 @@ export const useExamCreation = () => {
                 Cell: ({ row }) => {
                     return (
                         <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
-                            {getExamType(Number(row?.original?.examTypeId))}
+                            {getExamTypeName(row?.original?.examTypeId)}
                         </Box>
                     )
                 },
@@ -174,6 +180,19 @@ export const useExamCreation = () => {
         }
     }
 
+    const getExamTypeData = async () => {
+        try {
+          setLoading(true)
+          const data = await serverGetExamType();
+          setExamTypeData(data?.data)
+          setLoading(false)
+        } catch (err) {
+          console.log(err);
+          setExamTypeData([])
+          setLoading(false)
+        }
+      }
+
     const getQuestionTypeData = async () => {
         try {
             setLoading(true);
@@ -243,6 +262,7 @@ export const useExamCreation = () => {
         getSubjectData();
         getTopicData();
         getQuestionTypeData();
+        getExamTypeData();
     }, [])
 
     return {
