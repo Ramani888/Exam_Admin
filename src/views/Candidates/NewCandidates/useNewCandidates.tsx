@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { ICandidate } from '../../../types/candidate';
 import { IBatch } from '../../../types/batch';
-import { deleteSingleImage, isUrlString, uploadBase64SingleImage } from '../../../utils/helpers/global';
+import { deleteSingleImage, generatePassword, isUrlString, uploadBase64SingleImage } from '../../../utils/helpers/global';
 
 const useNewCandidates = () => {
   const navigate = useNavigate();
@@ -43,7 +43,9 @@ const useNewCandidates = () => {
     try {
       setLoading(true);
       const imagesUrl = await uploadBase64SingleImage(data?.imageSrc, `candidate`, 'image/jpeg');
-      await serverInsertCandidate({...data, profileImg: imagesUrl});
+      const password = generatePassword();
+      console.log('password', password)
+      await serverInsertCandidate({...data, profileImg: imagesUrl, password: password});
     } catch (err) {
       console.log(err);
       setLoading(false);
