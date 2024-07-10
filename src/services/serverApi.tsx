@@ -257,3 +257,9 @@ export const serverAdminLogin = async (data: {email: string, password: string}) 
   const res = await serverRequest('/admin/login', 'POST', data, true);
   return res
 }
+
+////////// Demo Request Api ///////////
+export const serverGetDemoRequest = async () => {
+  const res = await serverRequest('/demo/request', 'GET', null, true);
+  return res
+}

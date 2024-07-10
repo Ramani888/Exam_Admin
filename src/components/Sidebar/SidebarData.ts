@@ -73,6 +73,11 @@ export const SidebarData = [
         path: "/candidates/candidate-data",
         Icon: DashboardIcon,
       },
+      {
+        title: "Contact",
+        path: "/candidates/contact",
+        Icon: DashboardIcon,
+      },
     ],
   },
 ];

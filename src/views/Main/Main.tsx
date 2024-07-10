@@ -32,6 +32,7 @@ import Candidates from '../Candidates/Candidates';
 import NewCandidates from '../Candidates/NewCandidates/NewCandidates';
 import LoginView from '../Login/Login';
 import AccountMenu from '../../components/AccountMenu/AccountMenu';
+import Contact from '../Contact/Contact';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -238,6 +239,14 @@ const Main = () => {
               element={
                 <Suspense>
                   <NewCandidates />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/candidates/contact"
+              element={
+                <Suspense>
+                  <Contact />
                 </Suspense>
               }
             />
