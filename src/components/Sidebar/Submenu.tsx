@@ -34,7 +34,7 @@ const Submenu: React.FC<Props> = ({ open, item, handleDrawerOpen }) => {
     }, [open])
 
     useEffect(() => {
-        const isPathPresent = isPathIncluded(location.pathname, item);
+        const isPathPresent = isPathIncluded(location.pathname, item?.subNav, item?.path);
         if (isPathPresent && open) {
             setNestedOpen(true)
         } else {
@@ -48,10 +48,13 @@ const Submenu: React.FC<Props> = ({ open, item, handleDrawerOpen }) => {
                 sx={{
                     minHeight: 48,
                     justifyContent: open ? 'initial' : 'center',
-                    backgroundColor: ((isPathIncluded(location.pathname, item) && !open) || (isPathIncluded(location.pathname, item) && !nestedOpen)) ? '#1876d0' : 'transparent',
+                    backgroundColor: isPathIncluded(location.pathname, item?.subNav, item?.path) && !nestedOpen ? '#274b6d' : 'transparent',
+                    borderRight: isPathIncluded(location.pathname, item?.subNav, item?.path) && !nestedOpen ? '3px solid #1876d1' : 'none',
                     px: 2.5,
                 }}
                 onClick={handleNestedToggle}
+                component={Link}
+                to={!item?.subNav && item?.path}
             >
                 <ListItemIcon
                     sx={{
@@ -67,12 +70,12 @@ const Submenu: React.FC<Props> = ({ open, item, handleDrawerOpen }) => {
             </ListItemButton>
             {item?.subNav && (
                 <Collapse in={nestedOpen} timeout="auto" unmountOnExit>
-                    <List sx={{ marginLeft: theme.spacing(2) }}>
+                    <List>
                         {item?.subNav?.map((subItem: any, index: number) => {
                             const { Icon } = subItem;
                             const isSelected = location.pathname === subItem.path;
                             return (
-                                <ListItem disablePadding sx={{background: isSelected ? '#1876d1' : 'transparent', borderTopLeftRadius: '7px', borderBottomLeftRadius: '7px'}}>
+                                <ListItem disablePadding sx={{background: isSelected ? '#274b6d' : 'transparent', borderRight: isSelected ? '3px solid #1876d1' : 'none', paddingLeft: 7}}>
                                     <ListItemButton
                                         component={Link}
                                         to={subItem?.path}

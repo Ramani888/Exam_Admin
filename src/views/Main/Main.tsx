@@ -33,6 +33,10 @@ import NewCandidates from '../Candidates/NewCandidates/NewCandidates';
 import LoginView from '../Login/Login';
 import AccountMenu from '../../components/AccountMenu/AccountMenu';
 import Contact from '../Contact/Contact';
+import { SidebarData } from '../../components/Sidebar/SidebarData';
+import DashboardIcon from '@mui/icons-material/Dashboard'
+import Admin from '../../components/Admin/Admin';
+
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -135,6 +139,7 @@ const Main = () => {
               element={
                 <Suspense>
                   <Dashboard />
+                  {/* <Admin /> */}
                 </Suspense>
               }
             />
@@ -293,21 +298,30 @@ const Main = () => {
       }
     }, [location.pathname])
 
-    // useEffect(() => {
-    //   const adminDataString = localStorage.getItem('Admin');
-    //   if (adminDataString) {
-    //     if (location.pathname === '/Login') {
-    //       navigate('/')
-    //     }
-    //     try {
-    //       const adminData = JSON.parse(adminDataString);
-    //     } catch (error) {
-    //       console.error("Error parsing admin data:", error);
-    //     }
-    //   } else {
-    //     navigate('/Login')
-    //   }
-    // }, [location.pathname])
+    const findSidebarItem = (path: string) => {
+      for (let item of SidebarData) {
+        // Check if the path matches any subNav item
+        if (item.subNav) {
+          for (let subItem of item.subNav) {
+            if (subItem.path === path) {
+              return {...item, subItem: subItem};
+            }
+          }
+        }
+        // Check if the path matches the top-level item
+        if (item.path === path) {
+          return item;
+        }
+      }
+      return null;
+    };
+
+    const routeData: any = findSidebarItem(location?.pathname);
+    let Icon = DashboardIcon;
+
+    if (routeData) {
+      Icon = routeData.Icon;
+    }
 
     return (
       <>
@@ -319,7 +333,7 @@ const Main = () => {
           <Box sx={{ display: 'flex' }}>
             <CssBaseline />
             <AppBar position="fixed" open={open}>
-              <Toolbar>
+              <Toolbar sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
@@ -332,21 +346,30 @@ const Main = () => {
               >
                 <MenuIcon />
               </IconButton>
-              {open && (
+              {/* {open && (
                 <IconButton onClick={handleDrawerClose} sx={{marginRight: '10px'}}>
                   {theme.direction === 'rtl' ? <ChevronRightIcon sx={{color: '#ffffff'}}/> : <ChevronLeftIcon sx={{color: '#ffffff'}}/>}
                 </IconButton>
+              )} */}
+              {open && (
+                <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
+                  <Icon />
+                  <Typography variant='subtitle2' noWrap component="div">
+                    {routeData?.subItem ? `${routeData?.title} / ${routeData?.subItem?.title}` : routeData?.title}
+                  </Typography>
+                </div>
               )}
-              <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', alignItems: 'center'}}>
-                <Typography variant="h6" noWrap component="div">
-                  Project Title
-                </Typography>
-                <AccountMenu />
-              </div>
+              <AccountMenu />
               </Toolbar>
             </AppBar>
             <Drawer variant="permanent" open={open}>
-              <DrawerHeader sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+              <DrawerHeader sx={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+              <Typography variant="h1" fontSize={22} fontWeight={'bold'} marginLeft={1}>
+                Education
+              </Typography>
+              <IconButton onClick={handleDrawerClose}>
+                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon sx={{color: '#ffffff'}} />}
+              </IconButton>
               {/* <IconButton onClick={handleDrawerClose}>
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
               </IconButton> */}

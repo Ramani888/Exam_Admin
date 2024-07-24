@@ -17,18 +17,19 @@ export const convertToBase64 = (file: File): Promise<string | ArrayBuffer | null
     });
 };
 
-export const isPathIncluded = (pathToCheck: string, item: any)  =>{
-  if (item?.subNav) {
-    for (const data of item?.subNav) {
-      if (data?.path === pathToCheck) {
+export const isPathIncluded = (pathToCheck: string, subNavArray: any, path: string) => {
+  if (subNavArray) {
+    for (const item of subNavArray) {
+      if (item?.path === pathToCheck) {
         return true;
       }
     }
     return false;
   } else {
-    console.log('pathToCheck', pathToCheck)
-    if (item?.path === pathToCheck) {
+    if (pathToCheck === path) {
       return true;
+    } else {
+      return false;
     }
   }
 }

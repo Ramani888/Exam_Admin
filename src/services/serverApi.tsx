@@ -263,3 +263,9 @@ export const serverGetDemoRequest = async () => {
   const res = await serverRequest('/demo/request', 'GET', null, true);
   return res
 }
+
+////////// Admin Dahsboard Api ///////////
+export const serverGetDashboardData = async () => {
+  const res = await serverRequest('/admin/dashboard', 'GET', null, true);
+  return res
+}
