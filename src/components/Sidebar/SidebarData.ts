@@ -56,6 +56,11 @@ export const SidebarData = [
         path: "/exam-management/exam-scheduler",
         Icon: DashboardIcon,
       },
+      {
+        title: "Exam Proctoring",
+        path: "/exam-management/exam-proctoring",
+        Icon: DashboardIcon,
+      },
     ],
   },
   {

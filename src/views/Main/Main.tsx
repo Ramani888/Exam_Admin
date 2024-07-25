@@ -224,6 +224,14 @@ const Main = () => {
               }
             />
             <Route
+              path="/exam-management/exam-proctoring"
+              element={
+                <Suspense>
+                  <Admin />
+                </Suspense>
+              }
+            />
+            <Route
               path="/exam-management/new-exam-scheduler"
               element={
                 <Suspense>
