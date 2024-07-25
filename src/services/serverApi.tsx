@@ -10,7 +10,7 @@ import axios, { Method } from "axios";
 import { StatusCodes } from "http-status-codes";
 
 // const serverUrl = "http://localhost:3010/api";
-const serverUrl = "https://exam-backend-eta.vercel.app/api";
+const serverUrl = "https://exam-backend-theta.vercel.app/api";
 
 const errorCodes = [
   StatusCodes.INTERNAL_SERVER_ERROR,

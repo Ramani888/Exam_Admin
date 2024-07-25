@@ -60,7 +60,7 @@ import io from 'socket.io-client';
 import { AdminContainer } from './Admin.styled';
 
 // const serverUrl = "http://localhost:3010";
-const serverUrl = "https://exam-backend-eta.vercel.app";
+const serverUrl = "https://exam-backend-theta.vercel.app";
 
 const socket = io(serverUrl); // Ensure this matches your backend server URL
 
