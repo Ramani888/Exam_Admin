@@ -61,7 +61,7 @@ import { AdminContainer } from './Admin.styled';
 import { SERVER_URL } from '../../utils/consts/globalConst';
 
 // const serverUrl = "http://localhost:3010";
-const serverUrl = SERVER_URL;
+const serverUrl = 'https://exam-backend-theta.vercel.app';
 
 const socket = io(serverUrl); // Ensure this matches your backend server URL
 
