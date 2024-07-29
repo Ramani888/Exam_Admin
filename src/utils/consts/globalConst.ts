@@ -1,7 +1,7 @@
 import { OrderStatusType } from "../../types/order.d"
 
 export const TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NWZlYjZjNTRkYjc0OGRmMmVjYWNmZGQiLCJ1c2VybmFtZSI6ImRpdnllc2giLCJpYXQiOjE3MTQzNjE4OTEsImV4cCI6MTcxNjk1Mzg5MX0.CAwOC7c0yPl5qEzL2DhB1bkrVUeRO4VKYb6KreyxAhQ'
-
+export const SERVER_URL = 'https://exam-backend-theta.vercel.app/api';
 export const BusinessTypeData = [
     {id: 1, name: 'Retailer'},
     {id: 2, name: 'Wholesaler'},
