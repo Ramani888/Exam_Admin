@@ -64,7 +64,7 @@ import { SERVER_URL } from '../../utils/consts/globalConst';
 const serverUrl = 'https://exam-backend-theta.vercel.app';
 
 // const socket = io(serverUrl); // Ensure this matches your backend server URL
-const socket = io(serverUrl, { transports: ['websocket', 'polling'] })
+const socket = io(serverUrl, { transports: ['websocket'] })
 
 
 interface Stream {
