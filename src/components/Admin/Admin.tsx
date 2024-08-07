@@ -64,7 +64,13 @@ import { SERVER_URL } from '../../utils/consts/globalConst';
 const serverUrl = 'https://exam-backend-theta.vercel.app';
 
 // const socket = io(serverUrl); // Ensure this matches your backend server URL
-const socket = io(serverUrl, { path: '/socket.io', transports: ['websocket'], secure: true })
+const socket = io(serverUrl, {
+  query: { token:"blablabla...." },
+  path: '/socket.io',
+  withCredentials: true,
+  transports: ['websocket', 'polling'],
+  secure: true,
+})
 
 
 interface Stream {
