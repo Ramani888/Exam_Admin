@@ -61,16 +61,17 @@ import { AdminContainer } from './Admin.styled';
 import { SERVER_URL } from '../../utils/consts/globalConst';
 
 // const serverUrl = "http://localhost:3010";
-const serverUrl = 'https://exam-backend-theta.vercel.app';
+// const serverUrl = 'https://exam-backend-theta.vercel.app';
+const serverUrl = 'https://backend.zerocodecourses.com';
 
-// const socket = io(serverUrl); // Ensure this matches your backend server URL
-const socket = io(serverUrl, {
-  query: { token:"blablabla...." },
-  path: '/socket.io',
-  withCredentials: true,
-  transports: ['websocket', 'polling'],
-  secure: true,
-})
+const socket = io(serverUrl); // Ensure this matches your backend server URL
+// const socket = io(serverUrl, {
+//   query: { token:"blablabla...." },
+//   path: '/socket.io',
+//   withCredentials: true,
+//   transports: ['websocket', 'polling'],
+//   secure: true,
+// })
 
 
 interface Stream {
