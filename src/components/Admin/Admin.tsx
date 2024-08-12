@@ -1,60 +1,3 @@
-// import React, { useState, useEffect, useRef } from 'react';
-// import { io, Socket } from 'socket.io-client';
-
-// interface Stream {
-//   clientId: string;
-//   url: string;
-// }
-
-// const Admin: React.FC = () => {
-//   const [streams, setStreams] = useState<Stream[]>([]);
-//   const socketRef = useRef<Socket | null>(null);
-
-//   useEffect(() => {
-//     socketRef.current = io('http://localhost:3010');
-//     console.log('Connected to server');
-
-//     socketRef.current.on('stream', ({ clientId, data }: { clientId: string; data: BlobPart }) => {
-//       console.log('Received stream from client:', clientId);
-
-//       const url = URL.createObjectURL(new Blob([data], { type: 'video/webm' }));
-
-//       setStreams((prevStreams) => {
-//         if (!prevStreams.some((stream) => stream.clientId === clientId)) {
-//           return [...prevStreams, { clientId, url }];
-//         }
-//         return prevStreams;
-//       });
-//     });
-
-//     return () => {
-//       socketRef.current?.disconnect();
-//     };
-//   }, []);
-
-//   console.log('streams', streams)
-
-//   return (
-//     <div>
-//       <h2>Admin Live Streams</h2>
-//       {streams.map(({ clientId, url }) => (
-//         <div key={clientId}>
-//           <h3>Client: {clientId}</h3>
-//           <video
-//             src={url}
-//             controls
-//             autoPlay
-//             style={{ width: '80%', border: '1px solid black' }}
-//           ></video>
-//         </div>
-//       ))}
-//     </div>
-//   );
-// };
-
-// export default Admin;
-
-
 import React, { useRef, useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import { AdminContainer } from './Admin.styled';
@@ -64,14 +7,7 @@ import { SERVER_URL } from '../../utils/consts/globalConst';
 // const serverUrl = 'https://exam-backend-theta.vercel.app';
 const serverUrl = 'https://backend.zerocodecourses.com';
 
-const socket = io(serverUrl); // Ensure this matches your backend server URL
-// const socket = io(serverUrl, {
-//   query: { token:"blablabla...." },
-//   path: '/socket.io',
-//   withCredentials: true,
-//   transports: ['websocket', 'polling'],
-//   secure: true,
-// })
+const socket = io(serverUrl);
 
 
 interface Stream {
@@ -148,6 +84,116 @@ const Admin: React.FC = () => {
 };
 
 export default Admin;
+
+
+
+
+// import React, { useEffect, useRef, useState } from 'react';
+// import io from 'socket.io-client';
+
+// const socket = io('http://localhost:3010'); // Replace with your backend URL
+
+// interface StudentStream {
+//   id: string;
+//   stream: MediaStream;
+// }
+
+// const Admin: React.FC = () => {
+//   const [studentStreams, setStudentStreams] = useState<StudentStream[]>([]);
+//   const peerConnections = useRef<Record<string, RTCPeerConnection>>({});
+
+//   useEffect(() => {
+//     const handleOffer = async (id: string, offer: RTCSessionDescriptionInit) => {
+//       const peerConnection = new RTCPeerConnection({
+//         iceServers: [
+//           { urls: 'stun:stun.l.google.com:19302' },
+//         ],
+//       });
+
+//       peerConnections.current[id] = peerConnection;
+
+//       peerConnection.onicecandidate = (event) => {
+//         if (event.candidate) {
+//           socket.emit('ice-candidate', { candidate: event.candidate, id });
+//         }
+//       };
+
+//       peerConnection.ontrack = (event) => {
+//         setStudentStreams((prevStreams) => {
+//           const existingStream = prevStreams.find((stream) => stream.id === id);
+//           if (existingStream) {
+//             return prevStreams.map((stream) =>
+//               stream.id === id ? { ...stream, stream: event.streams[0] } : stream
+//             );
+//           }
+//           return [
+//             ...prevStreams,
+//             { id, stream: event.streams[0] },
+//           ];
+//         });
+//       };
+
+//       try {
+//         await peerConnection.setRemoteDescription(new RTCSessionDescription(offer));
+//         const answer = await peerConnection.createAnswer();
+//         await peerConnection.setLocalDescription(answer);
+//         socket.emit('answer', { answer, id });
+//       } catch (error) {
+//         console.error('Error creating answer', error);
+//       }
+//     };
+
+//     socket.on('offer', ({ id, offer }) => {
+//       handleOffer(id, offer);
+//     });
+
+//     socket.on('ice-candidate', async ({ id, candidate }) => {
+//       if (peerConnections.current[id]) {
+//         try {
+//           await peerConnections.current[id].addIceCandidate(new RTCIceCandidate(candidate));
+//         } catch (error) {
+//           console.error('Error adding received ICE candidate', error);
+//         }
+//       }
+//     });
+
+//     return () => {
+//       Object.values(peerConnections.current).forEach((pc) => pc.close());
+//     };
+//   }, []);
+
+//   return (
+//     <div>
+//       <h1>Admin View</h1>
+//       <div>
+//         {studentStreams.map(({ id, stream }) => (
+//           <div key={id}>
+//             <h2>Student {id}</h2>
+//             <video
+//               autoPlay
+//               playsInline
+//               style={{ width: '400px' }}
+//               ref={(video) => {
+//                 if (video && stream) {
+//                   video.srcObject = stream;
+//                 }
+//               }}
+//             />
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Admin;
+
+
+
+
+
+
+
 
 
 

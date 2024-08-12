@@ -25,28 +25,47 @@ interface ImageHandlerProps {
 const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
   const webcamRef = useRef<Webcam>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [modelsLoaded, setModelsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
     const loadModels = async () => {
-      await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-      await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
-      await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+      try {
+        await Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+          faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+          faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+        ]);
+        setModelsLoaded(true);
+        console.log('Models loaded successfully');
+      } catch (error) {
+        console.error('Error loading models:', error);
+        alert('Failed to load face detection models. Please try again later.');
+      }
     };
+
     loadModels();
   }, []);
 
   const capture = async () => {
+    if (!modelsLoaded) {
+      alert('Models are not yet loaded. Please wait a moment and try again.');
+      return;
+    }
+
     if (webcamRef.current) {
-      setLoading(true)
+      setLoading(true);
       const imageSrc = webcamRef.current.getScreenshot();
       if (imageSrc) {
-        const detections = await detectFaces(imageSrc);
-        if (detections.length === 1) {
-          onImageSelect(imageSrc);
-          setLoading(false);
-        } else {
-          setLoading(false);
-          alert('Please make sure only one face is in the picture');
+        try {
+          const detections = await detectFaces(imageSrc);
+          if (detections.length === 1) {
+            onImageSelect(imageSrc);
+          } else {
+            alert('Please make sure only one face is in the picture');
+          }
+        } catch (error) {
+          console.error('Error during face detection:', error);
+          alert('An error occurred while detecting faces. Please try again.');
         }
       }
       setLoading(false);
@@ -65,14 +84,13 @@ const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
         audio={false}
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        style={{borderRadius: '7px', height: '250px', width: '250px'}}
+        style={{ borderRadius: '7px', height: '250px', width: '250px' }}
       />
-      {/* <button onClick={capture}>Capture Photo</button> */}
       <LoadingButton
         loading={loading}
-        loadingPosition='start'
-        variant='contained' 
-        onClick={capture} 
+        loadingPosition="start"
+        variant="contained"
+        onClick={capture}
         startIcon={<CameraAltIcon />}
       >
         Click
@@ -83,31 +101,48 @@ const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
 
 
 const ImageUpload: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
+  const [modelsLoaded, setModelsLoaded] = useState(false);
 
   useEffect(() => {
     const loadModels = async () => {
-      await faceapi.nets.tinyFaceDetector.loadFromUri('/models');
-      await faceapi.nets.faceLandmark68Net.loadFromUri('/models');
-      await faceapi.nets.faceRecognitionNet.loadFromUri('/models');
+      try {
+        await Promise.all([
+          faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
+          faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
+          faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+        ]);
+        setModelsLoaded(true);
+        console.log('Models loaded successfully');
+      } catch (error) {
+        console.error('Error loading models:', error);
+      }
     };
+
     loadModels();
   }, []);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
+    if (file && modelsLoaded) {
       const reader = new FileReader();
       reader.onload = async () => {
         const dataURL = reader.result as string;
 
-        const detections = await detectFaces(dataURL);
-        if (detections.length === 1) {
-          onImageSelect(dataURL);
-        } else {
-          alert('Please make sure only one face is in the picture');
+        try {
+          const detections = await detectFaces(dataURL);
+          if (detections.length === 1) {
+            onImageSelect(dataURL);
+          } else {
+            alert('Please make sure only one face is in the picture');
+          }
+        } catch (error) {
+          console.error('Error during face detection:', error);
+          alert('An error occurred while detecting faces. Please try again.');
         }
       };
       reader.readAsDataURL(file);
+    } else if (!modelsLoaded) {
+      alert('Models are not yet loaded. Please wait a moment and try again.');
     }
   };
 
@@ -119,14 +154,14 @@ const ImageUpload: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
 
   return (
     <Button
-    component="label"
-    role={undefined}
-    variant="contained"
-    tabIndex={-1}
-    startIcon={<CloudUploadIcon />}
+      component="label"
+      role={undefined}
+      variant="contained"
+      tabIndex={-1}
+      startIcon={<CloudUploadIcon />}
     >
-    Upload file
-    <VisuallyHiddenInput type="file" accept="image/*" onChange={handleImageUpload} />
+      Upload file
+      <VisuallyHiddenInput type="file" accept="image/*" onChange={handleImageUpload} />
     </Button>
   );
 };
