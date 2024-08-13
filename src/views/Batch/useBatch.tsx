@@ -9,8 +9,10 @@ import {
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { useNavigate } from 'react-router-dom';
 
 const useBatch = () => {
+    const navigate = useNavigate();
     const [batchData, setBatchData] = useState<IBatch[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -177,9 +179,10 @@ const useBatch = () => {
         renderTopToolbarCustomActions: ({ table }) => (
           <Button
             variant="contained"
-            onClick={() => {
-              table.setCreatingRow(true);
-            }}
+            // onClick={() => {
+            //   table.setCreatingRow(true);
+            // }}
+            onClick={() => navigate('/candidates/new-batch')}
           >
             Create New Batch
           </Button>

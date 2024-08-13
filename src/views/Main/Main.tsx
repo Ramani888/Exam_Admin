@@ -36,6 +36,7 @@ import Contact from '../Contact/Contact';
 import { SidebarData } from '../../components/Sidebar/SidebarData';
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import Admin from '../../components/Admin/Admin';
+import NewBatch from '../Batch/NewBatch/NewBatch';
 
 
 interface AppBarProps extends MuiAppBarProps {
@@ -164,6 +165,14 @@ const Main = () => {
               element={
                 <Suspense>
                   <Batch />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/candidates/new-batch"
+              element={
+                <Suspense>
+                  <NewBatch />
                 </Suspense>
               }
             />
