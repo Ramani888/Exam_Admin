@@ -28,30 +28,3 @@ align-items: center;
 width: 100%;
 justify-content: flex-start;
 `
-export const StudentListContainer = styled.div`
-width: 100%;
-`
-export const StudentListHeaderContainer = styled.div`
-width: 100%;
-height: 50px;
-background-color: whitesmoke;
-padding: 20px;
-display: flex;
-align-items: center;
-justify-content: space-between;
-`
-export const StudentListBodyContainer = styled.div`
-width: 100%;
-height: 150px;
-overflow: auto;
-`
-export const SelectedStudentCount = styled.div`
-`
-export const Tr = styled.tr`
-height: 30px;
-border: 1px solid black;
-border-collapse: collapse;
-`
-export const Td = styled.td`
-min-width: 20px;
-`

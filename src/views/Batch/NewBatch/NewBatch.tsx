@@ -1,5 +1,5 @@
 import React from 'react'
-import { ButtonContainer, Form, NewBatchBodyContainer, NewBatchBodyRow, NewBatchContainer, NewBatchHeaderContainer, SelectedStudentCount, StudentListBodyContainer, StudentListContainer, StudentListHeaderContainer, Td, Tr } from './NewBatch.styled'
+import { ButtonContainer, Form, NewBatchBodyContainer, NewBatchBodyRow, NewBatchContainer, NewBatchHeaderContainer } from './NewBatch.styled'
 import AddHeader from '../../../components/AddHeader/AddHeader'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Formik } from "formik";
@@ -9,15 +9,16 @@ import {
   Button, Box, CircularProgress
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-import Checkbox from '@mui/material/Checkbox';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import { MaterialReactTable } from 'material-react-table'
 
 const NewBatch = () => {
   const {
     schema,
     handleClose,
     loading,
-    candidateData
+    table,
+    selectedStudent,
+    handleSubmit
   } = useNewBatch()
   const location = useLocation();
   const editData = location.state;
@@ -38,7 +39,7 @@ const NewBatch = () => {
             discription: editData ? editData?.discription : ''
           }}
           onSubmit={(values) => {
-            console.log('values', values)
+            handleSubmit(values);
           }}
         >
           {({
@@ -47,10 +48,7 @@ const NewBatch = () => {
           touched,
           handleChange,
           handleBlur,
-          handleSubmit,
-          isValid,
-          isValidating,
-          isSubmitting    
+          handleSubmit
           }) => (
             <Form onSubmit={handleSubmit}>
               <NewBatchBodyRow>
@@ -79,48 +77,32 @@ const NewBatch = () => {
                   isRequired
                 />
               </NewBatchBodyRow>
-              <StudentListContainer>
-                <StudentListHeaderContainer>
-                  <FormControlLabel control={<Checkbox checked={false} onChange={() => {}} />} label="Select All" />
-                  <SelectedStudentCount>Selected (20)</SelectedStudentCount>
-                </StudentListHeaderContainer>
-                <StudentListBodyContainer>
-                  {candidateData?.map((item, index) => {
-                    return (
-                      <Tr>
-                        <Td><Checkbox checked={false} onChange={() => {}} /></Td>
-                        {/* <Td>{index + 1}</Td> */}
-                        <Td>{item?.firstName + ' ' + item?.lastName}</Td>
-                      </Tr>
-                    )
-                  })}
-                </StudentListBodyContainer>
-              </StudentListContainer>
+              <MaterialReactTable table={table} />
               <ButtonContainer>
                 <Button onClick={() => handleClose()} variant="contained" color={'error'}>Cancel</Button>
                 <Box sx={{ m: 1, position: 'relative' }}>
-                    {/* <Button variant="contained" type='submit' color={'success'} disabled={!imageSrc}>Submit</Button> */}
-                    <LoadingButton
-                      loading={loading}
-                      loadingPosition='center'
-                      variant='contained'
-                      color={'success'}
-                      type='submit'
-                    >
-                      Submit
-                    </LoadingButton>
-                    {false && (
-                    <CircularProgress
-                        size={24}
-                        sx={{
-                        position: 'absolute',
-                        top: '50%',
-                        left: '50%',
-                        marginTop: '-12px',
-                        marginLeft: '-12px',
-                        }}
-                    />
-                    )}
+                  <LoadingButton
+                    loading={loading}
+                    loadingPosition='center'
+                    variant='contained'
+                    color={'success'}
+                    disabled={loading || selectedStudent?.length === 0 ? true : false}
+                    type='submit'
+                  >
+                    Submit
+                  </LoadingButton>
+                  {false && (
+                  <CircularProgress
+                    size={24}
+                    sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    marginTop: '-12px',
+                    marginLeft: '-12px',
+                    }}
+                  />
+                  )}
                 </Box>
               </ButtonContainer>
             </Form>
