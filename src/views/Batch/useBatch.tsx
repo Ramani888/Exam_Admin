@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { IBatch } from '../../types/batch';
-import { serverDeleteBatch, serverGetBatch, serverInsertBatch, serverUpdateBatch } from '../../services/serverApi';
+import { serverDeleteBatch, serverGetBatch, serverGetCandidata, serverInsertBatch, serverUpdateBatch } from '../../services/serverApi';
 import {
     type MRT_ColumnDef,
     type MRT_Row,
@@ -9,10 +9,12 @@ import {
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { ICandidate } from '../../types/candidate';
 
 const useBatch = () => {
     const [batchData, setBatchData] = useState<IBatch[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [candidateData, setCandidateData] = useState<ICandidate[]>([])
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
     const getBatchData = async () => {
         try {
@@ -27,9 +29,30 @@ const useBatch = () => {
         }
     }
 
+    const getCandidateData = async () => {
+        try {
+            setLoading(true);
+            const data = await serverGetCandidata();
+            setCandidateData(data?.data)
+        } catch (err) {
+            console.error(err);
+            setCandidateData([]);
+            setLoading(false);
+        } finally {
+            setLoading(false)
+        }
+    }
+
     useEffect(() => {
         getBatchData()
+        getCandidateData()
     }, [])
+
+    const getStudentCount = (batchId: string) => {
+        console.log('batchId', batchId)
+        const res = candidateData?.filter((item) => item?.batchId === batchId);
+        return res?.length;
+    }
 
     const columns = useMemo<MRT_ColumnDef<IBatch>[]>(
         () => [
@@ -61,8 +84,22 @@ const useBatch = () => {
                     }),
                 },
             },
+            {
+                accessorKey: 'students',
+                header: 'Students',
+                muiEditTextFieldProps: {
+                    disabled: true,
+                },
+                Cell: ({ row }: any) => {
+                    return (
+                    <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+                        {getStudentCount(row?.original?._id)}
+                    </Box>
+                    )
+                },
+            }
         ],
-        [validationErrors],
+        [validationErrors, candidateData, batchData],
     );
     const validateRequired = (value: string) => !!value.length;
 
