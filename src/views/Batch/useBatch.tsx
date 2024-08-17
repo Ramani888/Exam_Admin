@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { IBatch } from '../../types/batch';
-import { serverDeleteBatch, serverGetBatch, serverGetCandidata, serverInsertBatch, serverUpdateBatch } from '../../services/serverApi';
+import { serverDeleteBatch, serverGetBatch, serverGetCandidata, serverGetExamSchedule, serverInsertBatch, serverUpdateBatch } from '../../services/serverApi';
 import {
     type MRT_ColumnDef,
     type MRT_Row,
@@ -10,12 +10,15 @@ import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ICandidate } from '../../types/candidate';
+import { IExamSchedule } from '../../types/exam';
 
 const useBatch = () => {
     const [batchData, setBatchData] = useState<IBatch[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [candidateData, setCandidateData] = useState<ICandidate[]>([])
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
+    const [examScheduleData, setExamScheduleData] = useState<IExamSchedule[]>([]);
+
     const getBatchData = async () => {
         try {
             setLoading(true);
@@ -43,14 +46,33 @@ const useBatch = () => {
         }
     }
 
+    const getExamScheduleData = async () => {
+        try {
+            setLoading(true);
+            const data = await serverGetExamSchedule();
+            setExamScheduleData(data?.data);
+        } catch (error) {
+            console.log(error);
+            setExamScheduleData([]);
+            setLoading(false);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         getBatchData()
         getCandidateData()
+        getExamScheduleData()
     }, [])
 
     const getStudentCount = (batchId: string) => {
-        console.log('batchId', batchId)
         const res = candidateData?.filter((item) => item?.batchId === batchId);
+        return res?.length;
+    }
+
+    const getScheduleExamCount = (batchId: string) => {
+        const res = examScheduleData?.filter((item) => item?.batchId === batchId);
         return res?.length;
     }
 
@@ -94,6 +116,20 @@ const useBatch = () => {
                     return (
                     <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
                         {getStudentCount(row?.original?._id)}
+                    </Box>
+                    )
+                },
+            },
+            {
+                accessorKey: 'exam',
+                header: 'Schedule Exam',
+                muiEditTextFieldProps: {
+                    disabled: true,
+                },
+                Cell: ({ row }: any) => {
+                    return (
+                    <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+                        {getScheduleExamCount(row?.original?._id)}
                     </Box>
                     )
                 },

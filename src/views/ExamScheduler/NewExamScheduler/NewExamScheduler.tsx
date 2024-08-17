@@ -10,11 +10,12 @@ import {
   } from '@mui/material';
 import useNewExamScheduler from './useNewExamScheduler';
 import moment from 'moment';
+import { addMinutes } from '../../../utils/helpers/global';
+import { getCurrentDate, getCurrentTime } from '../../../utils/helpers/date';
 
 const NewExamScheduler = () => {
     const location = useLocation();
     const editData = location.state;
-    console.log('editData', editData)
     const navigate = useNavigate();
     const handleNavigate = () => {
         navigate('/exam-management/exam-scheduler');
@@ -24,8 +25,14 @@ const NewExamScheduler = () => {
         examData,
         schema,
         handleSubmit,
-        handleUpdate
+        handleUpdate,
+        batchData
     } = useNewExamScheduler();
+
+    const getSelectedExamDuration = (examId: string) => {
+        const findData = examData?.find((item) => item?._id === examId);
+        return Number(findData?.examDuration);
+    }
 
     return (
         <NewExamSchedulerContainer>
@@ -37,6 +44,7 @@ const NewExamScheduler = () => {
                     validationSchema={schema}
                     initialValues={{
                         examId: editData ? editData?.examId : '',
+                        batchId: editData ? editData?.batchId : '',
                         startDate: editData ? moment(editData?.startDate).format('YYYY-MM-DD') : '',
                         startTime: editData ? editData?.startTime : '',
                         endDate: editData ? moment(editData?.endDate).format('YYYY-MM-DD') : '',
@@ -44,12 +52,9 @@ const NewExamScheduler = () => {
                     }}
                     onSubmit={(values) => {
                         if (editData) {
-                            console.log('values', {...values, _id: editData?._id})
                             handleUpdate({...values, _id: editData?._id})
                         } else {
                             handleSubmit({...values})
-                            console.log('values', values)
-                            // handleSubmit({...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark), options: rows?.filter((item: any) => item?.name !== '')})
                         }
                     }}
                 >
@@ -78,6 +83,21 @@ const NewExamScheduler = () => {
                                     minWidth={'300px'}
                                     isRequired
                                 />
+                                <AppDropDown
+                                    data={batchData} 
+                                    placeHolder={'Please select'} 
+                                    handleChange={(e) => {
+                                        handleChange(e);
+                                    }} 
+                                    value={values?.batchId}
+                                    name={'batchId'}
+                                    handleBlur={handleBlur}
+                                    errors={errors}
+                                    touched={touched}
+                                    label={'Batch Name'}
+                                    minWidth={'300px'}
+                                    isRequired
+                                />
                             </NewExamSchedulerRow>
                             <NewExamSchedulerRow>
                                 <AppInput
@@ -103,6 +123,7 @@ const NewExamScheduler = () => {
                                     errors={errors}
                                     touched={touched}
                                     isRequired
+                                    min={values?.startDate === getCurrentDate() && getCurrentTime()}
                                 />
                             </NewExamSchedulerRow>
                             <NewExamSchedulerRow>
@@ -116,6 +137,8 @@ const NewExamScheduler = () => {
                                     handleBlur={handleBlur}
                                     errors={errors}
                                     touched={touched}
+                                    min={values?.startDate && new Date(values?.startDate).toISOString().split('T')[0]}
+                                    // max={addMinutesToDateOnly(String(values?.startDate), getSelectedExamDuration(values?.examId))}
                                     isRequired
                                 />
                                 <AppInput
@@ -128,6 +151,8 @@ const NewExamScheduler = () => {
                                     handleBlur={handleBlur}
                                     errors={errors}
                                     touched={touched}
+                                    min={values?.startDate === values?.endDate && addMinutes(String(values?.startTime), getSelectedExamDuration(values?.examId))}
+                                    // max={addMinutes(String(values?.startTime), getSelectedExamDuration(values?.examId))}
                                     isRequired
                                 />
                             </NewExamSchedulerRow>

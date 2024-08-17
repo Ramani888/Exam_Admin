@@ -199,5 +199,40 @@ export const generatePassword = (length = 12) => {
   return password;
 };
 
+export const addMinutes = (time: string, minutesToAdd: number): string => {
+  // Split time into hours and minutes
+  const [hours, minutes] = time.split(':').map(Number);
+
+  // Create a Date object with the given time
+  const date = new Date();
+  date.setHours(hours);
+  date.setMinutes(minutes);
+  date.setSeconds(0);
+
+  // Add the minutes
+  date.setMinutes(date.getMinutes() + minutesToAdd);
+
+  // Format the new time as HH:MM
+  const newHours = date.getHours().toString().padStart(2, '0');
+  const newMinutes = date.getMinutes().toString().padStart(2, '0');
+  return `${newHours}:${newMinutes}`;
+};
+
+export const addMinutesToDateOnly = (date: string, minutesToAdd: number): string => {
+  // Create a Date object from the given date string
+  const dateObj = new Date(date);
+
+  // Set the time to midnight (00:00) to ensure only the date is considered
+  dateObj.setHours(0, 0, 0, 0);
+
+  // Add the minutes
+  dateObj.setMinutes(dateObj.getMinutes() + minutesToAdd);
+
+  // Format the new date as YYYY-MM-DD
+  const newDate = dateObj.toISOString().split('T')[0];
+
+  return newDate;
+};
+
 
 

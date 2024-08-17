@@ -9,20 +9,15 @@ import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useNavigate } from 'react-router-dom';
-import { serverDeleteExamSchedule, serverGetExamData, serverGetExamSchedule } from '../../services/serverApi';
+import { serverDeleteExamSchedule, serverGetBatch, serverGetExamData, serverGetExamSchedule } from '../../services/serverApi';
 import { IExam, IExamSchedule } from '../../types/exam';
 import { formatDateTime, getStringDateTime } from '../../utils/consts/exam';
 import moment from 'moment';
+import { IBatch } from '../../types/batch';
 
 const useExamScheduler = () => {
     const [loading, setLoading] = useState<boolean>(false);
     const [examScheduleData, setExamScheduleData] = useState<IExamSchedule[]>([]);
-    const [examData, setExamData] = useState<IExam[]>([]);
-
-    const getExamName = (examId?: string) => {
-        const res = examData?.find((item) => item?._id?.toString() === examId)
-        return res?.name
-    }
 
     const navigate = useNavigate();
     const columns = useMemo<MRT_ColumnDef<IExamSchedule>[]>(
@@ -33,7 +28,18 @@ const useExamScheduler = () => {
                 Cell: ({ row }: any) => {
                 return (
                 <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
-                    {getExamName(row?.original?.examId)}
+                    {row?.original?.examData?.name}
+                </Box>
+                )
+                },
+            },
+            {
+                accessorKey: "batchId",
+                header: "Batch Name",
+                Cell: ({ row }: any) => {
+                return (
+                <Box sx={{ display: 'flex', gap: '2ch', alignItems: 'center' }}>
+                    {row?.original?.batchData?.name}
                 </Box>
                 )
                 },
@@ -61,7 +67,7 @@ const useExamScheduler = () => {
                 },
             },
         ],
-      [examData]
+      []
     );
 
     const handleEditData = (row: MRT_Row<IExamSchedule>) => {
@@ -137,22 +143,8 @@ const useExamScheduler = () => {
         }
     }
 
-    const getExamData = async () => {
-        try {
-            setLoading(true)
-            const data = await serverGetExamData();
-            setExamData(data?.data);
-        } catch (err) {
-            setLoading(false);
-            setExamData([]);
-        } finally {
-            setLoading(false);
-        }
-    }
-
     useEffect(() => {
         getExamScheduleData()
-        getExamData()
     }, [])
 
     return {

@@ -1,3 +1,5 @@
+import { IBatch } from "./batch";
+
 export interface IExamType {
     _id?: ObjectId;
     name: string;
@@ -72,6 +74,9 @@ export interface IExam {
 export interface IExamSchedule{
     _id?: string;
     examId: string;
+    batchId: string;
+    examData?: IExam;
+    batchData?: IBatch;
     startDate: Date;
     startTime: Date;
     endDate: Date;

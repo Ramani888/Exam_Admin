@@ -23,9 +23,11 @@ interface Props {
   isUpdate?: boolean;
   minWidth?: string;
   isRequired?: boolean;
+  min?: any;
+  max?: any;
 }
 
-const AppInput: React.FC<Props> = ({ label, type, handleChange, name, value, placeholder, inputProps, handleBlur, errors, touched, isUpdate, minWidth, isRequired }) => {
+const AppInput: React.FC<Props> = ({ label, type, handleChange, name, value, placeholder, inputProps, handleBlur, errors, touched, isUpdate, minWidth, isRequired, min, max }) => {
   return (
     <AppInputContainer minWidth={minWidth}>
       <InputLabelAndErrorContainer>
@@ -43,6 +45,15 @@ const AppInput: React.FC<Props> = ({ label, type, handleChange, name, value, pla
         value={value}
         inputProps={inputProps}
         onBlur={handleBlur}
+        InputProps={{
+          inputProps: {
+              ...(min && { min: min }),
+              ...(max && { max: max }),
+          },
+        }}
+      //   InputLabelProps={{
+      //     shrink: true,  // Ensure label is always visible
+      // }}
       />
       {isUpdate && (
         <NoticeLabel>("If you wish to alter the image, please select it.")</NoticeLabel>
