@@ -21,19 +21,21 @@ import { uploadBase64SingleImage, uploadSingleImage } from '../../../utils/helpe
 interface ImageHandlerProps {
   onImageSelect: (src: string) => void;
 }
+const baseurl = process.env.PUBLIC_URL + '/models';
 
 const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
   const webcamRef = useRef<Webcam>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [modelsLoaded, setModelsLoaded] = useState<boolean>(false);
 
+
   useEffect(() => {
     const loadModels = async () => {
       try {
         await Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-          faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-          faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+          faceapi.nets.tinyFaceDetector.loadFromUri(baseurl),
+          faceapi.nets.faceLandmark68Net.loadFromUri(baseurl),
+          faceapi.nets.faceRecognitionNet.loadFromUri(baseurl),
         ]);
         setModelsLoaded(true);
         console.log('Models loaded successfully');
@@ -107,9 +109,9 @@ const ImageUpload: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
     const loadModels = async () => {
       try {
         await Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-          faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-          faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+          faceapi.nets.tinyFaceDetector.loadFromUri(baseurl),
+          faceapi.nets.faceLandmark68Net.loadFromUri(baseurl),
+          faceapi.nets.faceRecognitionNet.loadFromUri(baseurl),
         ]);
         setModelsLoaded(true);
         console.log('Models loaded successfully');
