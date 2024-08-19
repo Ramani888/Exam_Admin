@@ -31,9 +31,9 @@ const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
     const loadModels = async () => {
       try {
         await Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-          faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-          faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+          faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+          faceapi.nets.faceLandmark68Net.loadFromUri('models'),
+          faceapi.nets.faceRecognitionNet.loadFromUri('models'),
         ]);
         setModelsLoaded(true);
         console.log('Models loaded successfully');
@@ -107,9 +107,9 @@ const ImageUpload: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
     const loadModels = async () => {
       try {
         await Promise.all([
-          faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-          faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-          faceapi.nets.faceRecognitionNet.loadFromUri('/models'),
+          faceapi.nets.tinyFaceDetector.loadFromUri('models'),
+          faceapi.nets.faceLandmark68Net.loadFromUri('models'),
+          faceapi.nets.faceRecognitionNet.loadFromUri('models'),
         ]);
         setModelsLoaded(true);
         console.log('Models loaded successfully');
