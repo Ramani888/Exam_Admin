@@ -114,9 +114,9 @@ const ImageUpload: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
   const [modelsLoaded, setModelsLoaded] = useState(false);
 
   useEffect(() => {
-    // As MediaPipe doesn't need separate loading of models like face-api.js,
-    // we'll just set modelsLoaded to true immediately.
+    // The FaceDetection library does not require explicit model loading, so we just set the state to true
     setModelsLoaded(true);
+    console.log('FaceDetection library initialized');
   }, []);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,12 +125,67 @@ const ImageUpload: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
       const reader = new FileReader();
       reader.onload = async () => {
         const dataURL = reader.result as string;
-        onImageSelect(dataURL); // No need for detection, handled by the WebcamCapture component.
+
+        try {
+          const detections = await detectFaces(dataURL);
+          if (detections.length === 1) {
+            onImageSelect(dataURL);
+          } else if (detections.length === 0) {
+            alert('No face detected in the image. Please upload an image with a visible face.');
+          } else {
+            alert('Multiple faces detected. Please make sure only one face is in the picture.');
+          }
+        } catch (error) {
+          console.error('Error during face detection:', error);
+          alert('An error occurred while detecting faces. Please try again.');
+        }
       };
       reader.readAsDataURL(file);
     } else if (!modelsLoaded) {
-      alert('Models are not yet loaded. Please wait a moment and try again.');
+      alert('Face detection is not yet initialized. Please wait a moment and try again.');
     }
+  };
+
+  const detectFaces = async (imageSrc: string): Promise<any[]> => {
+    const img = new Image();
+    img.src = imageSrc;
+
+    return new Promise<any[]>((resolve, reject) => {
+      img.onload = async () => {
+        try {
+          const faceDetection = new FaceDetection({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`,
+          });
+
+          faceDetection.setOptions({
+            model: 'short', // or 'full' for a more detailed model
+            minDetectionConfidence: 0.5,
+          });
+
+          faceDetection.onResults((results: { detections: any[] }) => {
+            if (results.detections && results.detections.length > 0) {
+              resolve(results.detections);
+            } else {
+              resolve([]); // No faces detected
+            }
+          });
+
+          // Create a canvas to send the image to FaceDetection
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            await faceDetection.send({ image: canvas });
+          }
+        } catch (error) {
+          reject(error);
+        }
+      };
+
+      img.onerror = (error) => reject(error);
+    });
   };
 
   return (
