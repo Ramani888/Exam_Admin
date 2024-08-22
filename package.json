@@ -5,6 +5,8 @@
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^7.0.0",
     "@firebase/storage": "^0.12.5",
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/face_detection": "^0.4.1646425229",
     "@mui/icons-material": "^5.15.19",
     "@mui/lab": "^5.0.0-alpha.170",
     "@tensorflow/tfjs": "^4.20.0",
