@@ -26,18 +26,23 @@ const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
   const webcamRef = useRef<HTMLVideoElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [modelsLoaded, setModelsLoaded] = useState<boolean>(false);
+  const [faceDetected, setFaceDetected] = useState<boolean>(false); // Store face detection result
 
   useEffect(() => {
-    const faceDetection = new FaceDetection({ locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}` });
+    const faceDetection = new FaceDetection({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_detection/${file}`
+    });
 
     faceDetection.setOptions({
-        model: 'short', // You can also use 'full' for a more detailed model
-        minDetectionConfidence: 0.5,
-      });
+      model: 'short',
+      minDetectionConfidence: 0.5,
+    });
 
     faceDetection.onResults((results) => {
       if (results.detections.length > 0) {
-        console.log('Face detected');
+        setFaceDetected(true); // Update state when a face is detected
+      } else {
+        setFaceDetected(false); // No face detected
       }
     });
 
@@ -59,6 +64,11 @@ const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
   const capture = () => {
     if (!modelsLoaded) {
       alert('Models are not yet loaded. Please wait a moment and try again.');
+      return;
+    }
+
+    if (!faceDetected) {
+      alert('No face detected. Please ensure your face is visible in the webcam.');
       return;
     }
 
@@ -98,6 +108,7 @@ const WebcamCapture: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
     </WebcamContainer>
   );
 };
+
 
 const ImageUpload: React.FC<ImageHandlerProps> = ({ onImageSelect }) => {
   const [modelsLoaded, setModelsLoaded] = useState(false);
