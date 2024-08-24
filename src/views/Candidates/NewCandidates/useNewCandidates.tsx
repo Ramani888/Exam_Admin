@@ -45,6 +45,7 @@ const useNewCandidates = () => {
       const imagesUrl = await uploadBase64SingleImage(data?.imageSrc, `candidate`, 'image/jpeg');
       const password = generatePassword();
       console.log('password', password)
+      delete data.imageSrc;
       await serverInsertCandidate({...data, profileImg: imagesUrl, password: password});
     } catch (err) {
       console.log(err);
@@ -61,6 +62,7 @@ const useNewCandidates = () => {
         if (!isUrlString(data?.imageSrc)) {
           const imagesUrl = await uploadBase64SingleImage(data?.imageSrc, `candidate`, 'image/jpeg');
           await deleteSingleImage(data?.deleteProfileImg)
+          delete data.imageSrc;
           await serverUpdateCandidata({...data, profileImg: imagesUrl});
         } else {
           await serverUpdateCandidata({...data, profileImg: data?.imageSrc});
