@@ -17,9 +17,9 @@ const useNewCandidates = () => {
     rollNumber: Yup.string().required("Please enter a roll number.*"),
     firstName: Yup.string().required("Please enter a first name.*"),
     lastName: Yup.string().required("Please enter a last name.*"),
-    middleName: Yup.string().required("Please enter a middle name.*"),
+    // middleName: Yup.string().required("Please enter a middle name.*"),
     email: Yup.string().required("Please enter a email.*"),
-    number: Yup.string().required("Please enter a mobile number.*")
+    // number: Yup.string().required("Please enter a mobile number.*")
   });
 
   const getBatchData = async () => {

@@ -16,7 +16,6 @@ import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import ImageIcon from '@mui/icons-material/Image';
 import DeleteIcon from '@mui/icons-material/Delete';
 import LoadingButton from '@mui/lab/LoadingButton';
-import { uploadBase64SingleImage, uploadSingleImage } from '../../../utils/helpers/global';
 
 interface ImageHandlerProps {
   onImageSelect: (src: string) => void;
@@ -315,7 +314,6 @@ const NewCandidates = () => {
                   handleBlur={handleBlur}
                   errors={errors}
                   touched={touched}
-                  isRequired
                 />
                 <AppInput
                   label='Last Name'
@@ -353,7 +351,6 @@ const NewCandidates = () => {
                   handleBlur={handleBlur}
                   errors={errors}
                   touched={touched}
-                  isRequired
                 />
               </NewCandidatesBodyRow>
 
