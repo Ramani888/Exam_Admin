@@ -1,6 +1,6 @@
 import { ExamType } from "../../types/exam.d"
 
-export const getExamType = (examTypeId: number) => {
+export const getExamType = (examTypeId: string) => {
     switch (examTypeId) {
         case ExamType.SubjectiveExam:
             return 'Subjective exam'

@@ -13,9 +13,6 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import { Navigate, Route, Routes, useLocation, useNavigate } from 'react-router-dom'
-
-import { LogoutContainer, LogoutTitle } from './Main.styled';
-import LogoutIcon from '@mui/icons-material/Logout';
 import Batch from '../Batch/Batch';
 import Dashboard from '../Dashboard/Dashboard';
 import Subject from '../Subject/Subject';
@@ -125,10 +122,6 @@ const Main = () => {
     const handleDrawerClose = () => {
       setOpen(false);
     };
-
-    // useEffect(() => {
-    //   document.title = 'Vr Fashion';
-    // }, [location]);
 
     const getRoutes = () => {
       return (
@@ -354,11 +347,6 @@ const Main = () => {
               >
                 <MenuIcon />
               </IconButton>
-              {/* {open && (
-                <IconButton onClick={handleDrawerClose} sx={{marginRight: '10px'}}>
-                  {theme.direction === 'rtl' ? <ChevronRightIcon sx={{color: '#ffffff'}}/> : <ChevronLeftIcon sx={{color: '#ffffff'}}/>}
-                </IconButton>
-              )} */}
               {open && (
                 <div style={{display: 'flex', alignItems: 'center', gap: '10px'}}>
                   <Icon />
@@ -378,17 +366,9 @@ const Main = () => {
               <IconButton onClick={handleDrawerClose}>
                 {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon sx={{color: '#ffffff'}} />}
               </IconButton>
-              {/* <IconButton onClick={handleDrawerClose}>
-                {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-              </IconButton> */}
-              {/* <img src='/VR_Fashion_Logo.jpeg' height={60} width={60}></img> */}
               </DrawerHeader>
               <Divider />
               <Sidebar open={open} handleDrawerOpen={handleDrawerOpen}/>
-              {/* <LogoutContainer onClick={() => handleLogout()}>
-                <LogoutIcon />
-                <LogoutTitle>Logout</LogoutTitle>
-              </LogoutContainer> */}
             </Drawer>
             <Box component="main" sx={{ flexGrow: 1, m: 2, height: 'calc(100%)', overflowY: 'hidden' }}>
               <DrawerHeader />

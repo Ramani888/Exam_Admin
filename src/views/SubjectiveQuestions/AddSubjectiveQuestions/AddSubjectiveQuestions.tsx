@@ -9,6 +9,9 @@ import { Formik } from "formik";
 import AppInput from '../../../components/AppInput/AppInput';
 import { Box, Button, CircularProgress } from '@mui/material';
 import { removeHtmlTags } from '../../../utils/consts/globalConst';
+import {
+    MaterialReactTable
+} from 'material-react-table';
 
 const AddSubjectiveQuestions = () => {
     const location = useLocation();
@@ -25,7 +28,9 @@ const AddSubjectiveQuestions = () => {
         topicData,
         questionTypeData,
         handleSubmit,
-        handleUpdate
+        handleUpdate,
+        table,
+        answerKeyData
     } = useAddSubjectiveQuestions()
     
     return (
@@ -47,7 +52,7 @@ const AddSubjectiveQuestions = () => {
                         if (editData) {
                             handleUpdate({...editData, ...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark)})
                         } else {
-                            handleSubmit({...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark)})
+                            handleSubmit({...values, question: removeHtmlTags(values?.question), mark: Number(values?.mark), answerKeyData: answerKeyData})
                         }
                     }}
                 >
@@ -131,6 +136,8 @@ const AddSubjectiveQuestions = () => {
                                 touched={touched}
                                 isRequired
                             />
+
+                            <MaterialReactTable table={table} />
 
                             <ButtonContainer>
                                 <Button onClick={() => handleClose()} variant="contained" color={'error'} disabled={false}>Cancel</Button>

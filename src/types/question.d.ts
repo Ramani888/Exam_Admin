@@ -7,6 +7,7 @@ export interface ISubjectiveQuestion {
     mark: number;
     createdAt?: Date;
     updatedAt?: Date;
+    answerKeyData?: {id: number, name: string}[];
 }
 
 export interface IQuestionType {

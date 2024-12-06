@@ -73,7 +73,7 @@ const useNewExamCreation = () => {
     }
   }
 
-  const getFilterQuestionTypeData = (examTypeId: number) => {
+  const getFilterQuestionTypeData = (examTypeId: string) => {
     switch (examTypeId) {
       case ExamType.SubjectiveExam:
         return questionTypeData.filter((item) => item?.name === 'SUBJECTIVE');

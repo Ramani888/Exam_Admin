@@ -8,9 +8,9 @@ export interface IExamType {
 }
 
 export enum ExamType {
-    SubjectiveExam,
-    ObjectiveExam,
-    Both
+    SubjectiveExam = '665d25de1e2969dc2ba91900',
+    ObjectiveExam = '665d25fa1e2969dc2ba91901',
+    Both = '665d26121e2969dc2ba91902'
 }
 
 export const examTypeData = [
