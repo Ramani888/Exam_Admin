@@ -10,8 +10,8 @@ import { SERVER_URL, TOKEN } from "../utils/consts/globalConst";
 import axios, { Method } from "axios";
 import { StatusCodes } from "http-status-codes";
 
-const serverUrl = "http://localhost:3010/api";
-// const serverUrl = SERVER_URL;
+// const serverUrl = "http://localhost:3010/api";
+const serverUrl = SERVER_URL;
 
 const errorCodes = [
   StatusCodes.INTERNAL_SERVER_ERROR,
