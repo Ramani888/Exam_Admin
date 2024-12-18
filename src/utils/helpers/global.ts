@@ -234,5 +234,23 @@ export const addMinutesToDateOnly = (date: string, minutesToAdd: number): string
   return newDate;
 };
 
+export const getUserData = () => {
+  try {
+    const user = localStorage.getItem('Admin');
+    if (user) {
+      const res = JSON.parse(user);
+      if (res) {
+        return res;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
+  } catch (e) {
+    throw e;
+  }
+}
+
 
 

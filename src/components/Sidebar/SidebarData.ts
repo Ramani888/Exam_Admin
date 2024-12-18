@@ -30,12 +30,12 @@ export const SidebarData = [
         Icon: DashboardIcon,
       },
       {
-        title: "Subjective Questions",
+        title: "Subjective Question",
         path: "/question-bank/subjective-questions",
         Icon: DashboardIcon,
       },
       {
-        title: "Objective Questions",
+        title: "Objective Question",
         path: "/question-bank/objective-questions",
         Icon: DashboardIcon,
       },
@@ -74,13 +74,18 @@ export const SidebarData = [
         Icon: DashboardIcon,
       },
       {
-        title: "Candidates Data",
+        title: "Candidate",
         path: "/candidates/candidate-data",
         Icon: DashboardIcon,
       },
       {
         title: "Contact",
         path: "/candidates/contact",
+        Icon: DashboardIcon,
+      },
+      {
+        title: "Instructors",
+        path: "/candidates/instructor",
         Icon: DashboardIcon,
       },
     ],

@@ -11,8 +11,11 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ICandidate } from '../../types/candidate';
 import { IExamSchedule } from '../../types/exam';
+import { getUserData } from '../../utils/helpers/global';
 
 const useBatch = () => {
+    const userData = getUserData();
+    const batchPermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Batch')?.permissions
     const [batchData, setBatchData] = useState<IBatch[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [candidateData, setCandidateData] = useState<ICandidate[]>([])
@@ -236,12 +239,12 @@ const useBatch = () => {
         renderRowActions: ({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip title="Edit">
-                <IconButton onClick={() => table.setEditingRow(row)}>
+                <IconButton onClick={() => table.setEditingRow(row)} disabled={!batchPermission?.edit}>
                     <EditIcon />
                 </IconButton>
             </Tooltip>
             <Tooltip title="Delete">
-                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!batchPermission?.delete}>
                     <DeleteIcon />
                 </IconButton>
             </Tooltip>
@@ -253,6 +256,7 @@ const useBatch = () => {
             onClick={() => {
               table.setCreatingRow(true);
             }}
+            disabled={!batchPermission?.add}
           >
             Create New Batch
           </Button>

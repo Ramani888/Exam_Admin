@@ -33,6 +33,8 @@ import Contact from '../Contact/Contact';
 import { SidebarData } from '../../components/Sidebar/SidebarData';
 import DashboardIcon from '@mui/icons-material/Dashboard'
 import Admin from '../../components/Admin/Admin';
+import Instructors from '../Instructors/Instructors';
+import NewInstructor from '../Instructors/NewInstructor/NewInstructor';
 
 
 interface AppBarProps extends MuiAppBarProps {
@@ -253,6 +255,23 @@ const Main = () => {
               element={
                 <Suspense>
                   <Contact />
+                </Suspense>
+              }
+            />
+
+            <Route
+              path="/candidates/instructor"
+              element={
+                <Suspense>
+                  <Instructors />
+                </Suspense>
+              }
+            />
+            <Route
+              path="/candidates/new-instructor"
+              element={
+                <Suspense>
+                  <NewInstructor />
                 </Suspense>
               }
             />

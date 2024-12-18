@@ -13,8 +13,11 @@ import {
     useMaterialReactTable,
 } from 'material-react-table';
 import { useNavigate } from 'react-router-dom';
+import { getUserData } from '../../utils/helpers/global';
 
 const useObjectiveQuestions = () => {
+    const userData = getUserData();
+    const objectivePermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Objective Question')?.permissions
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [subjectData, setSubjectData] = useState<ISubject[]>([]);
@@ -177,12 +180,12 @@ const useObjectiveQuestions = () => {
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
               <Tooltip title="Edit">
-                  <IconButton onClick={() => handleEditData(row)}>
+                  <IconButton onClick={() => handleEditData(row)} disabled={!objectivePermission?.edit}>
                       <EditIcon />
                   </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!objectivePermission?.delete}>
                       <DeleteIcon />
                   </IconButton>
               </Tooltip>
@@ -193,6 +196,7 @@ const useObjectiveQuestions = () => {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => navigate('/question-bank/new-objective-question')}
+              disabled={!objectivePermission?.add}
             >
                 New
             </Button>
@@ -205,8 +209,6 @@ const useObjectiveQuestions = () => {
         getQuestionTypeData();
         getObjectiveQuestionData();
     }, [])
-
-    console.log('objectiveQuestionData', objectiveQuestionData)
 
     return {
         table

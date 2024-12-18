@@ -13,8 +13,11 @@ import { useNavigate } from 'react-router-dom';
 import { ISubject } from '../../types/subject';
 import { ITopic } from '../../types/topic';
 import AddIcon from '@mui/icons-material/Add';
+import { getUserData } from '../../utils/helpers/global';
 
 const useSubjectiveQuestions = () => {
+    const userData = getUserData();
+    const subijectivePermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Subjective Question')?.permissions
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [subjectData, setSubjectData] = useState<ISubject[]>([]);
@@ -179,12 +182,12 @@ const useSubjectiveQuestions = () => {
         renderRowActions: ({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip title="Edit">
-                <IconButton onClick={() => handleEditData(row)}>
+                <IconButton onClick={() => handleEditData(row)} disabled={!subijectivePermission?.edit}>
                     <EditIcon />
                 </IconButton>
             </Tooltip>
             <Tooltip title="Delete">
-                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!subijectivePermission?.delete}>
                     <DeleteIcon />
                 </IconButton>
             </Tooltip>
@@ -195,6 +198,7 @@ const useSubjectiveQuestions = () => {
             variant="contained"
             startIcon={<AddIcon />}
             onClick={() => navigate('/question-bank/new-subjective-question')}
+            disabled={!subijectivePermission?.add}
           >
             New
           </Button>

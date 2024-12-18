@@ -9,8 +9,11 @@ import { serverDeleteSubject, serverGetSubject, serverInsertSubject, serverUpdat
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, IconButton, Tooltip } from '@mui/material';
+import { getUserData } from '../../utils/helpers/global';
 
 const useSubject = () => {
+    const userData = getUserData();
+    const subjectPermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Subject')?.permissions
     const [subjectData, setSubjectData] = useState<ISubject[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [validationErrors, setValidationErrors] = useState<Record<string, string | undefined>>({});
@@ -146,12 +149,12 @@ const useSubject = () => {
         renderRowActions: ({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip title="Edit">
-                <IconButton onClick={() => table.setEditingRow(row)}>
+                <IconButton onClick={() => table.setEditingRow(row)} disabled={!subjectPermission?.edit}>
                     <EditIcon />
                 </IconButton>
             </Tooltip>
             <Tooltip title="Delete">
-                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!subjectPermission?.delete}>
                     <DeleteIcon />
                 </IconButton>
             </Tooltip>
@@ -163,6 +166,7 @@ const useSubject = () => {
             onClick={() => {
               table.setCreatingRow(true);
             }}
+            disabled={!subjectPermission?.add}
           >
             Create New Subject
           </Button>

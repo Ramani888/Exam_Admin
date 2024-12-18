@@ -4,7 +4,7 @@ import InboxIcon from '@mui/icons-material/MoveToInbox';
 import { ExpandLess, ExpandMore } from '@mui/icons-material';
 import { useTheme } from '@mui/material/styles';
 import { Link, useLocation } from 'react-router-dom';
-import { isPathIncluded } from '../../utils/helpers/global';
+import { getUserData, isPathIncluded } from '../../utils/helpers/global';
 
 interface Props {
     open: boolean;
@@ -13,6 +13,7 @@ interface Props {
 }
 
 const Submenu: React.FC<Props> = ({ open, item, handleDrawerOpen }) => {
+    const userData = getUserData();
     const { Icon } = item;
     const theme = useTheme();
     const location = useLocation();
@@ -74,25 +75,28 @@ const Submenu: React.FC<Props> = ({ open, item, handleDrawerOpen }) => {
                         {item?.subNav?.map((subItem: any, index: number) => {
                             const { Icon } = subItem;
                             const isSelected = location.pathname === subItem.path;
-                            return (
-                                <ListItem disablePadding sx={{background: isSelected ? '#274b6d' : 'transparent', borderRight: isSelected ? '3px solid #1876d1' : 'none', paddingLeft: 7}}>
-                                    <ListItemButton
-                                        component={Link}
-                                        to={subItem?.path}
-                                    >
-                                        {/* <ListItemIcon
-                                            sx={{
-                                            minWidth: 0,
-                                            mr: open ? 3 : 'auto',
-                                            justifyContent: 'center',
-                                            }}
+                            const findPermission = userData?.permissionGroups?.find((permission: any) => permission?.group === subItem?.title);
+                            if (findPermission?.permissions?.read) {
+                                return (
+                                    <ListItem disablePadding sx={{background: isSelected ? '#274b6d' : 'transparent', borderRight: isSelected ? '3px solid #1876d1' : 'none', paddingLeft: 7}}>
+                                        <ListItemButton
+                                            component={Link}
+                                            to={subItem?.path}
                                         >
-                                            <Icon sx={{color: '#ffffff'}}/>
-                                        </ListItemIcon> */}
-                                        <ListItemText primary={subItem?.title} />
-                                    </ListItemButton>
-                                </ListItem>
-                            )
+                                            {/* <ListItemIcon
+                                                sx={{
+                                                minWidth: 0,
+                                                mr: open ? 3 : 'auto',
+                                                justifyContent: 'center',
+                                                }}
+                                            >
+                                                <Icon sx={{color: '#ffffff'}}/>
+                                            </ListItemIcon> */}
+                                            <ListItemText primary={subItem?.title} />
+                                        </ListItemButton>
+                                    </ListItem>
+                                )
+                            }
                         })}
                     </List>
                 </Collapse>

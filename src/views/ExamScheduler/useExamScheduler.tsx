@@ -14,8 +14,11 @@ import { IExam, IExamSchedule } from '../../types/exam';
 import { formatDateTime, getStringDateTime } from '../../utils/consts/exam';
 import moment from 'moment';
 import { IBatch } from '../../types/batch';
+import { getUserData } from '../../utils/helpers/global';
 
 const useExamScheduler = () => {
+    const userData = getUserData();
+    const examSchedulerPermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Exam Scheduler')?.permissions
     const [loading, setLoading] = useState<boolean>(false);
     const [examScheduleData, setExamScheduleData] = useState<IExamSchedule[]>([]);
 
@@ -87,12 +90,12 @@ const useExamScheduler = () => {
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
               <Tooltip title="Edit">
-                  <IconButton onClick={() => handleEditData(row)}>
+                  <IconButton onClick={() => handleEditData(row)} disabled={!examSchedulerPermission?.edit}>
                       <EditIcon />
                   </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!examSchedulerPermission?.delete}>
                       <DeleteIcon />
                   </IconButton>
               </Tooltip>
@@ -103,6 +106,7 @@ const useExamScheduler = () => {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => navigate('/exam-management/new-exam-scheduler')}
+              disabled={!examSchedulerPermission?.add}
             >
                 New
             </Button>

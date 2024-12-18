@@ -12,10 +12,12 @@ import { ICandidate } from '../../types/candidate';
 import { serverDeleteCandidate, serverGetBatch, serverGetCandidata } from '../../services/serverApi';
 import { IBatch } from '../../types/batch';
 import EditIcon from '@mui/icons-material/Edit';
-import { deleteSingleImage } from '../../utils/helpers/global';
+import { deleteSingleImage, getUserData } from '../../utils/helpers/global';
 import Avatar from '@mui/material/Avatar';
 
 const useCandidates = () => {
+    const userData = getUserData();
+    const candidatePermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Candidate')?.permissions
     const navigate = useNavigate();
     const [batchData, setBatchData] = useState<IBatch[]>([]);
     const [candidateData, setCandidateData] = useState<ICandidate[]>([])
@@ -103,12 +105,12 @@ const useCandidates = () => {
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
               <Tooltip title="Edit">
-                  <IconButton onClick={() => handleEditData(row)}>
+                  <IconButton onClick={() => handleEditData(row)} disabled={!candidatePermission?.edit}>
                       <EditIcon />
                   </IconButton>
               </Tooltip>
               <Tooltip title="Delete">
-                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!candidatePermission?.delete}>
                       <DeleteIcon />
                   </IconButton>
               </Tooltip>
@@ -119,6 +121,7 @@ const useCandidates = () => {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => navigate('/candidates/new-candidate-data')}
+              disabled={!candidatePermission?.add}
             >
                 New
             </Button>

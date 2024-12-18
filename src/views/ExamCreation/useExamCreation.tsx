@@ -16,8 +16,11 @@ import { ITopic } from '../../types/topic';
 import { IQuestionType } from '../../types/question';
 import moment from 'moment';
 import Chip from '@mui/material/Chip';
+import { getUserData } from '../../utils/helpers/global';
 
 export const useExamCreation = () => {
+    const userData = getUserData();
+    const examCreationPermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Exam Creation')?.permissions
     const navigate = useNavigate();
     const [loading, setLoading] = useState<boolean>(false);
     const [examData, setExamData] = useState<IExam[]>([]);
@@ -240,7 +243,7 @@ export const useExamCreation = () => {
         renderRowActions: ({ row, table }) => (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
               <Tooltip title="Delete">
-                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                  <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!examCreationPermission?.delete}>
                       <DeleteIcon />
                   </IconButton>
               </Tooltip>
@@ -251,6 +254,7 @@ export const useExamCreation = () => {
               variant="contained"
               startIcon={<AddIcon />}
               onClick={() => navigate('/exam-management/new-exam-creation')}
+              disabled={!examCreationPermission?.add}
             >
                 New
             </Button>

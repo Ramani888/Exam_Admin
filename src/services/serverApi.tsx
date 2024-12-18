@@ -1,6 +1,7 @@
 import { IBanner } from "../types/banner";
 import { ICandidate } from "../types/candidate";
 import { IExam, IExamSchedule } from "../types/exam";
+import { Instructor } from "../types/instructor";
 import { IProduct } from "../types/product";
 import { ISubjectiveQuestion } from "../types/question";
 import { ISubject } from "../types/subject";
@@ -9,8 +10,8 @@ import { SERVER_URL, TOKEN } from "../utils/consts/globalConst";
 import axios, { Method } from "axios";
 import { StatusCodes } from "http-status-codes";
 
-// const serverUrl = "http://localhost:3010/api";
-const serverUrl = SERVER_URL;
+const serverUrl = "http://localhost:3010/api";
+// const serverUrl = SERVER_URL;
 
 const errorCodes = [
   StatusCodes.INTERNAL_SERVER_ERROR,
@@ -267,5 +268,26 @@ export const serverGetDemoRequest = async () => {
 ////////// Admin Dahsboard Api ///////////
 export const serverGetDashboardData = async () => {
   const res = await serverRequest('/admin/dashboard', 'GET', null, true);
+  return res
+}
+
+////////// Instructor Dahsboard Api ///////////
+export const serverInsertInstructor = async (data: Instructor) => {
+  const res = await serverRequest('/instructor', 'POST', data, true);
+  return res
+}
+
+export const serverGetInstructors = async () => {
+  const res = await serverRequest('/instructor', 'GET', null, true);
+  return res
+}
+
+export const serverDeleteInstructor = async (instructorId: string) => {
+  const res = await serverRequest(`/instructor?instructorId=${instructorId}`, 'DELETE', null, true);
+  return res
+}
+
+export const serverUpdateInstructor = async (data: Instructor) => {
+  const res = await serverRequest(`/instructor`, 'PUT', data, true);
   return res
 }

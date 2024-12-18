@@ -10,8 +10,11 @@ import { Box, Button, IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ISubject } from '../../types/subject';
+import { getUserData } from '../../utils/helpers/global';
 
 const useTopic = () => {
+    const userData = getUserData();
+    const topicPermission = userData?.permissionGroups?.find((item: any) => item?.group === 'Topic')?.permissions
     const [topicData, setTopicData] = useState<ITopic[]>([]);
     const [subjectData, setSubjectData] = useState<{value: string, label: string}[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
@@ -199,12 +202,12 @@ const useTopic = () => {
         renderRowActions: ({ row, table }) => (
           <Box sx={{ display: 'flex', gap: '1rem' }}>
             <Tooltip title="Edit">
-                <IconButton onClick={() => table.setEditingRow(row)}>
+                <IconButton onClick={() => table.setEditingRow(row)} disabled={!topicPermission?.edit}>
                     <EditIcon />
                 </IconButton>
             </Tooltip>
             <Tooltip title="Delete">
-                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)}>
+                <IconButton color="error" onClick={() => openDeleteConfirmModal(row)} disabled={!topicPermission?.delete}>
                     <DeleteIcon />
                 </IconButton>
             </Tooltip>
@@ -216,6 +219,7 @@ const useTopic = () => {
             onClick={() => {
               table.setCreatingRow(true);
             }}
+            disabled={!topicPermission?.add}
           >
             Create New Topic
           </Button>
