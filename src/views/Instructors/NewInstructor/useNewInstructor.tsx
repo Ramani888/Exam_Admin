@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from "yup";
 import { serverInsertInstructor, serverUpdateInstructor } from '../../../services/serverApi';
 import { Instructor } from '../../../types/instructor';
+import { getUserData } from '../../../utils/helpers/global';
 
 const useNewInstructor = (editData: Instructor) => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -74,6 +75,8 @@ const useNewInstructor = (editData: Instructor) => {
     try {
       setLoading(true);
       await serverUpdateInstructor({...data, permissionGroups: permissions});
+      const userData = getUserData();
+      localStorage.setItem('Admin', JSON.stringify({...userData, permissionGroups: permissions}));
     } catch (err) {
       console.log(err);
       setLoading(false);

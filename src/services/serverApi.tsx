@@ -253,6 +253,11 @@ export const serverUpdateCandidata = async (data: ICandidate) => {
   return res
 }
 
+export const serverGetCandidateDataByBatchId = async (batchId: string) => {
+  const res = await serverRequest(`/candidate/batch?batchId=${batchId}`, 'GET', null, true);
+  return res
+}
+
 ////////// Admin Login ///////////
 export const serverAdminLogin = async (data: {email: string, password: string}) => {
   const res = await serverRequest('/admin/login', 'POST', data, true);

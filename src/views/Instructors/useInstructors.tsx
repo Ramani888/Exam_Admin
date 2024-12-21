@@ -22,18 +22,18 @@ const useInstructors = () => {
     const [instructorsData, setInstructorsData] = useState<Instructor[]>([])
 
     const getInstructorsData = async () => {
-            try {
-                setLoading(true);
-                const data = await serverGetInstructors();
-                setInstructorsData(data?.data)
-            } catch (err) {
-                console.error(err);
-                setInstructorsData([]);
-                setLoading(false);
-            } finally {
-                setLoading(false)
-            }
+        try {
+            setLoading(true);
+            const data = await serverGetInstructors();
+            setInstructorsData(data?.data)
+        } catch (err) {
+            console.error(err);
+            setInstructorsData([]);
+            setLoading(false);
+        } finally {
+            setLoading(false)
         }
+    }
 
     const columns = useMemo<MRT_ColumnDef<any>[]>(
         () => [
